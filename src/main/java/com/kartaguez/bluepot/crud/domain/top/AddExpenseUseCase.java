@@ -1,0 +1,30 @@
+package com.kartaguez.bluepot.crud.domain.top;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.kartaguez.bluepot.crud.domain.top.dto.AddExpenseDtoIn;
+import com.kartaguez.bluepot.crud.domain.top.dto.AddExpenseDtoOut;
+import com.kartaguez.bluepot.crud.domain.top.worker.factory.AddExpenseUserCaseWorkerFactory;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class AddExpenseUseCase {
+
+    private final AddExpenseUserCaseWorkerFactory addExpenseUserCaseWorkerFactory;
+
+    @Transactional
+    public AddExpenseDtoOut apply(AddExpenseDtoIn addExpenseDtoIn) {
+
+        return this.addExpenseUserCaseWorkerFactory.getNewWorker()
+            .initiateWorkflow()
+            .withAddExpenseDtoIn(addExpenseDtoIn)
+            .createExpense()
+            .saveExpense()
+            .reply();
+
+    }
+
+}

@@ -1,4 +1,4 @@
-package com.kartaguez.bluepot.crud.domain.out.repository;
+package com.kartaguez.bluepot.crud.domain.bottom.repository;
 
 import java.util.UUID;
 
