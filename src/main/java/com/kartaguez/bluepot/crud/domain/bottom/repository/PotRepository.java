@@ -2,9 +2,13 @@ package com.kartaguez.bluepot.crud.domain.bottom.repository;
 
 import java.util.UUID;
 
-import com.kartaguez.bluepot.crud.domain.model.Pot;
+import com.kartaguez.bluepot.crud.domain.model.object.Pot;
 
 public interface PotRepository {
 
-    public Pot loadPotByUuid(UUID potUuid);
+    public Pot loadPotByUuid(UUID potUuid, long _targetGlobalVersion);
+
+    public Pot create(Pot pot);
+
+    public Pot update(Pot pot);
 }

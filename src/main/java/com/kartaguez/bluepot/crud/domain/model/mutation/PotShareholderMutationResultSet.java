@@ -1,6 +1,6 @@
 package com.kartaguez.bluepot.crud.domain.model.mutation;
 
-import com.kartaguez.bluepot.crud.domain.model.PotShareholder;
+import com.kartaguez.bluepot.crud.domain.model.object.PotShareholder;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

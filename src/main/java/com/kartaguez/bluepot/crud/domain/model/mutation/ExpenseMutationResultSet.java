@@ -2,7 +2,7 @@ package com.kartaguez.bluepot.crud.domain.model.mutation;
 
 import java.util.List;
 
-import com.kartaguez.bluepot.crud.domain.model.Expense;
+import com.kartaguez.bluepot.crud.domain.model.object.Expense;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

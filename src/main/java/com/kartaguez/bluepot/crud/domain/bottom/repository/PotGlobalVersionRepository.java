@@ -2,7 +2,7 @@ package com.kartaguez.bluepot.crud.domain.bottom.repository;
 
 import java.util.UUID;
 
-import com.kartaguez.bluepot.crud.domain.model.PotGlobalVersion;
+import com.kartaguez.bluepot.crud.domain.model.object.PotGlobalVersion;
 
 public interface PotGlobalVersionRepository {
 

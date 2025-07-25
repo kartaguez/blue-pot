@@ -1,6 +1,6 @@
 package com.kartaguez.bluepot.crud.domain.bottom.repository;
 
-import com.kartaguez.bluepot.crud.domain.model.Expense;
+import com.kartaguez.bluepot.crud.domain.model.object.Expense;
 
 public interface ExpenseRepository {
 
