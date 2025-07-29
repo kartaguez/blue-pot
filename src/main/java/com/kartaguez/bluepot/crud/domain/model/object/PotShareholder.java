@@ -29,6 +29,10 @@ public class PotShareholder extends VersionedObject {
         this.name = _name;
     }
 
+    public static PotShareholder hydrateRoot(@NonNull UUID _uuid, @NonNull UUID _potUuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+        return new PotShareholder(_uuid, _potUuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name);
+    }
+
     public static PotShareholderMutationResultSet create(@NonNull UUID _potUuid, long _targetGlobalVersion, @NonNull String _name) {
         if (Constants.EMPTY_STRING.equals(_name)) {
             throw new IllegalArgumentException("Pot Shareholder name cannot be empty.");

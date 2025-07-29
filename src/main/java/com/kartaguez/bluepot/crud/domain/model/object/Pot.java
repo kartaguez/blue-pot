@@ -27,9 +27,8 @@ public class Pot extends VersionedObject {
     private HashMap<UUID, PotShareholder> potShareholders;
     private HashMap<UUID, Expense> expenses;
 
-    private Pot(@NonNull UUID _uuid, long _version, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
+    private Pot(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
         this.uuid = _uuid;
-        this.version = _version;
         this.targetGlobalVersion = _targetGlobalVersion;
         this.createdAtVersion = _createdAtVersion;
         this.deletedAtVersion = _deletedAtVersion;
@@ -46,19 +45,19 @@ public class Pot extends VersionedObject {
         }
     }
 
-    public static Pot hydrateAgregate(@NonNull UUID _uuid, long _version, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
-        return new Pot(_uuid, _version, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, _potShareholders, _expenses);
+    public static Pot hydrateAgregate(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
+        return new Pot(_uuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, _potShareholders, _expenses);
     }
 
-    public static Pot hydrateRoot(@NonNull UUID _uuid, long _version, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
-        return new Pot(_uuid, _version, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, null, null);
+    public static Pot hydrateRoot(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+        return new Pot(_uuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, null, null);
     }
 
     public static PotMutationResultSet createRoot(@NonNull String _name) {
         if (Constants.EMPTY_STRING.equals(_name)) {
             throw new IllegalArgumentException("Pot name cannot be empty.");
         }
-        Pot createdPot = new Pot(UUID.randomUUID(), Constants.FIRST_VERSION, Constants.FIRST_VERSION, Constants.FIRST_VERSION, Constants.NULL_VERSION, _name, null, null);
+        Pot createdPot = new Pot(UUID.randomUUID(), Constants.FIRST_VERSION, Constants.FIRST_VERSION, Constants.NULL_VERSION, _name, null, null);
         return new PotMutationResultSet(null, createdPot, null);
     }
 
@@ -70,8 +69,7 @@ public class Pot extends VersionedObject {
             throw new IllegalArgumentException("Pot name cannot be empty.");
         }
         this.markAsDeleted();
-        Pot renamedPot = new Pot(this.uuid, this.version, this.targetGlobalVersion, this.targetGlobalVersion, Constants.NULL_VERSION, _name, this.potShareholders, this.expenses);
-        renamedPot.incrementVersion();
+        Pot renamedPot = new Pot(this.uuid, this.targetGlobalVersion, this.targetGlobalVersion, Constants.NULL_VERSION, _name, this.potShareholders, this.expenses);
         return new PotMutationResultSet(this, renamedPot, null);
     }
 

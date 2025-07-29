@@ -6,9 +6,7 @@ import com.kartaguez.bluepot.crud.domain.model.object.Pot;
 
 public interface PotRepository {
 
-    public Pot loadPotByUuid(UUID potUuid, long _targetGlobalVersion);
+    public Pot loadPotByUuid(UUID potUuid, long targetGlobalVersion);
 
-    public Pot create(Pot pot);
-
-    public Pot update(Pot pot);
+    public Pot save(Pot pot);
 }

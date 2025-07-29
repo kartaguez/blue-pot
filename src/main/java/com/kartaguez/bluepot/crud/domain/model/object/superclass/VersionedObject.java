@@ -10,7 +10,6 @@ import lombok.Data;
 public class VersionedObject {
 
     protected UUID uuid;
-    protected long version;
     protected long targetGlobalVersion = Constants.FIRST_VERSION;
     protected long createdAtVersion = Constants.FIRST_VERSION;
     protected long deletedAtVersion = Constants.NULL_VERSION;
@@ -20,15 +19,10 @@ public class VersionedObject {
             throw new java.lang.IllegalStateException("Pot already deleted.");
         }
         this.deletedAtVersion = this.targetGlobalVersion;
-        this.incrementVersion();
     }
 
     public boolean isDeleted() {
         return this.deletedAtVersion != Constants.NULL_VERSION;
-    }
-
-    protected void incrementVersion() {
-        this.version++;
     }
 
     public static long getPreviousVersion(long currentVersion) {

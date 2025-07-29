@@ -1,4 +1,4 @@
-package com.kartaguez.bluepot.crud.infrastructure.repository.jpa.entity;
+package com.kartaguez.bluepot.crud.infrastructure.repository.jpa.entity.object;
 
 import java.util.UUID;
 
@@ -11,30 +11,30 @@ import lombok.Data;
 
 @Entity
 @Data
-
-public class PotEntity {
+public class ExpenseShareholderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Version
-    private Long internalVersion;
     
-    private UUID uuid;
+    @Version
     private Long version;
 
+    private UUID uuid;
     private Long createdAtVersion;
     private Long deletedAtVersion;
     
-    private String name;
+    private UUID expenseUuid;
+    private UUID potShareholderUuid;
+    private String weight;
 
-    public PotEntity(UUID _uuid, long _version, long _createdAtVersion, long _deletedAtVersion, String _name) {
+    public ExpenseShareholderEntity(UUID _uuid, long _createdAtVersion, long _deletedAtVersion, UUID _expenseUuid, UUID _potShareholderUuid, String _weight) {
         this.uuid = _uuid;
-        this.version = _version;
         this.createdAtVersion = _createdAtVersion;
         this.deletedAtVersion = _deletedAtVersion;
-        this.name = _name;
+        this.expenseUuid = _expenseUuid;
+        this.potShareholderUuid = _potShareholderUuid;
+        this.weight = _weight;
     }
 
 }

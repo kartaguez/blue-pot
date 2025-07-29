@@ -61,7 +61,7 @@ public class CreatePotUseCaseWorker {
     }
 
     private CreatePotUseCaseWorker savePot() {
-        this.potRepository.create(this.pot);
+        this.potRepository.save(this.pot);
         this.potShareholderRepository.saveAll(this.pot.getPotShareholders().values());
         this.potGlobalVersionRepository.save(this.potGlobalVersion);
         return this;
