@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
 import com.kartaguez.bluepot.crud.domain.model.dto.PotShareholderDto;
 import com.kartaguez.bluepot.crud.domain.model.object.PotShareholder;
 
 import lombok.NonNull;
 
+@Component
 public class PotShareholderDtoMapper {
 
     public PotShareholderDto toDto(@NonNull PotShareholder potShareholder) {

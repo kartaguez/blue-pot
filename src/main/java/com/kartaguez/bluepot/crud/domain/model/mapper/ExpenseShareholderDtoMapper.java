@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.lang3.math.Fraction;
+import org.springframework.stereotype.Component;
 
 import com.kartaguez.bluepot.crud.domain.model.dto.ExpenseShareholderDto;
 import com.kartaguez.bluepot.crud.domain.model.object.ExpenseShareholder;
 
 import lombok.NonNull;
 
+@Component
 public class ExpenseShareholderDtoMapper {
 
     public ExpenseShareholderDto toDto(@NonNull ExpenseShareholder expenseShareholder) {

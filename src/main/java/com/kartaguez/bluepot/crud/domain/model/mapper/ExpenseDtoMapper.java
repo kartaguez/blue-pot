@@ -1,10 +1,13 @@
 package com.kartaguez.bluepot.crud.domain.model.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.kartaguez.bluepot.crud.domain.model.dto.ExpenseDto;
 import com.kartaguez.bluepot.crud.domain.model.object.Expense;
 
 import lombok.NonNull;
 
+@Component
 public class ExpenseDtoMapper {
 
     public ExpenseDto toDto(@NonNull Expense expense) {

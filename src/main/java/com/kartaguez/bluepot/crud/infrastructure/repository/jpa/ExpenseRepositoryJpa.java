@@ -13,10 +13,9 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @Data
 @RequiredArgsConstructor
-public class ExpenseRepositoryImpl implements ExpenseRepository {
+public class ExpenseRepositoryJpa implements ExpenseRepository {
 
     private ExpenseEntityJpaRepository expenseEntityJpaRepository;
     private ExpenseEntityMapper expenseEntityMapper;

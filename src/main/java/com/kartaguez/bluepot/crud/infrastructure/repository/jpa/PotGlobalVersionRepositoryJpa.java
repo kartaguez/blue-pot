@@ -13,10 +13,9 @@ import com.kartaguez.bluepot.crud.infrastructure.repository.jpa.entity.repositor
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @Data
 @RequiredArgsConstructor
-public class PotGlobalVersionRepositoryImpl implements PotGlobalVersionRepository {
+public class PotGlobalVersionRepositoryJpa implements PotGlobalVersionRepository {
 
     private PotGlobalVersionEntityJpaRepository potGlobalVersionEntityJpaRepository;
     private PotGlobalVersionEntityMapper potGlobalVersionEntityMapper;

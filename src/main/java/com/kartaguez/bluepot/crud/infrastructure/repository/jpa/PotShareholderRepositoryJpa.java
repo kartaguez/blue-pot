@@ -16,10 +16,9 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @Data
 @RequiredArgsConstructor
-public class PotShareholderRepositoryImpl implements PotShareholderRepository {
+public class PotShareholderRepositoryJpa implements PotShareholderRepository {
 
     private PotShareholderEntityJpaRepository potShareholderEntityJpaRepository;
     private PotShareholderEntityMapper potShareholderEntityMapper;

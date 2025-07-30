@@ -1,11 +1,14 @@
 package com.kartaguez.bluepot.crud.infrastructure.repository.jpa.entity.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.kartaguez.bluepot.crud.domain.model.object.PotShareholder;
 import com.kartaguez.bluepot.crud.infrastructure.repository.jpa.entity.object.PotShareholderEntity;
 import com.kartaguez.bluepot.crud.utils.Constants;
 
 import lombok.NonNull;
 
+@Component
 public class PotShareholderEntityMapper {
 
     public PotShareholder toDomain(@NonNull PotShareholderEntity potShareholderEntity, long targetGlobalVersion) {
