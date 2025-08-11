@@ -1,4 +1,4 @@
-package com.kartaguez.bluepot.crud.config.infrastructure.down;
+package com.kartaguez.bluepot.infrastructure.up.dummy.config.infrastructure.down;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

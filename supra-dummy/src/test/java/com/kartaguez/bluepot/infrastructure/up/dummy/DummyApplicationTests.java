@@ -1,4 +1,4 @@
-package com.kartaguez.bluepot.crud;
+package com.kartaguez.bluepot.infrastructure.up.dummy;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @RequiredArgsConstructor
-class CrudApplicationTests {
+class DummyApplicationTests {
 
 	private final CreatePotUseCase createPotUseCase;
 
