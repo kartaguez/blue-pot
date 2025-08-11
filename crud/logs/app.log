@@ -1,0 +1,96 @@
+2025-08-11T22:02:03.832+02:00  INFO 17696 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Starting CrudApplicationTests using Java 21.0.7 with PID 17696 (started by julie in C:\Users\julie\Development\Source\_vs_code\BluePot\crud)
+2025-08-11T22:02:03.847+02:00  INFO 17696 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2025-08-11T22:02:09.031+02:00  INFO 17696 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-11T22:02:09.335+02:00  INFO 17696 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 252 ms. Found 5 JPA repository interfaces.
+2025-08-11T22:02:12.079+02:00  INFO 17696 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-11T22:02:13.018+02:00  INFO 17696 --- [crud] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=KARTAGUEZ
+2025-08-11T22:02:13.026+02:00  INFO 17696 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-11T22:02:13.312+02:00  INFO 17696 --- [crud] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-11T22:02:13.803+02:00  INFO 17696 --- [crud] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-11T22:02:14.082+02:00  INFO 17696 --- [crud] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-11T22:02:15.970+02:00  INFO 17696 --- [crud] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-11T22:02:16.396+02:00  WARN 17696 --- [crud] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-11T22:02:16.503+02:00  INFO 17696 --- [crud] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-11T22:02:19.542+02:00  INFO 17696 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseEntity (class must be instantiated by Interceptor)
+2025-08-11T22:02:19.652+02:00  INFO 17696 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:02:19.702+02:00  INFO 17696 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:02:19.743+02:00  INFO 17696 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity (class must be instantiated by Interceptor)
+2025-08-11T22:02:19.771+02:00  INFO 17696 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotGlobalVersionEntity (class must be instantiated by Interceptor)
+2025-08-11T22:02:20.438+02:00  INFO 17696 --- [crud] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-11T22:02:20.580+02:00  INFO 17696 --- [crud] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:02:22.426+02:00  WARN 17696 --- [crud] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-11T22:02:24.300+02:00  INFO 17696 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Started CrudApplicationTests in 21.918 seconds (process running for 29.593)
+2025-08-11T22:02:24.536+02:00  INFO 17696 --- [crud] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:02:24.549+02:00  INFO 17696 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-11T22:02:24.609+02:00  INFO 17696 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-08-11T22:08:21.012+02:00  INFO 18872 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Starting CrudApplicationTests using Java 21.0.7 with PID 18872 (started by julie in C:\Users\julie\Development\Source\_vs_code\BluePot\crud)
+2025-08-11T22:08:21.020+02:00  INFO 18872 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2025-08-11T22:08:30.228+02:00  INFO 18872 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-11T22:08:30.708+02:00  INFO 18872 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 409 ms. Found 5 JPA repository interfaces.
+2025-08-11T22:08:38.614+02:00  INFO 18872 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-11T22:08:39.720+02:00  INFO 18872 --- [crud] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=KARTAGUEZ
+2025-08-11T22:08:39.747+02:00  INFO 18872 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-11T22:08:40.180+02:00  INFO 18872 --- [crud] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-11T22:08:42.383+02:00  INFO 18872 --- [crud] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-11T22:08:43.054+02:00  INFO 18872 --- [crud] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-11T22:08:51.564+02:00  INFO 18872 --- [crud] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-11T22:08:52.486+02:00  WARN 18872 --- [crud] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-11T22:08:52.809+02:00  INFO 18872 --- [crud] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-11T22:08:58.164+02:00  INFO 18872 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseEntity (class must be instantiated by Interceptor)
+2025-08-11T22:08:58.315+02:00  INFO 18872 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:08:58.384+02:00  INFO 18872 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:08:58.436+02:00  INFO 18872 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity (class must be instantiated by Interceptor)
+2025-08-11T22:08:58.480+02:00  INFO 18872 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotGlobalVersionEntity (class must be instantiated by Interceptor)
+2025-08-11T22:08:59.177+02:00  INFO 18872 --- [crud] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-11T22:08:59.344+02:00  INFO 18872 --- [crud] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:09:02.297+02:00  WARN 18872 --- [crud] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-11T22:09:04.487+02:00  INFO 18872 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Started CrudApplicationTests in 49.651 seconds (process running for 62.655)
+2025-08-11T22:09:07.362+02:00  INFO 18872 --- [crud] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:09:07.386+02:00  INFO 18872 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-11T22:09:07.411+02:00  INFO 18872 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-08-11T22:13:35.251+02:00  INFO 21964 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Starting CrudApplicationTests using Java 21.0.7 with PID 21964 (started by julie in C:\Users\julie\Development\Source\_vs_code\BluePot\crud)
+2025-08-11T22:13:35.256+02:00  INFO 21964 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2025-08-11T22:13:39.743+02:00  INFO 21964 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-11T22:13:40.062+02:00  INFO 21964 --- [crud] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 282 ms. Found 5 JPA repository interfaces.
+2025-08-11T22:13:43.990+02:00  INFO 21964 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-11T22:13:45.500+02:00  INFO 21964 --- [crud] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=KARTAGUEZ
+2025-08-11T22:13:45.510+02:00  INFO 21964 --- [crud] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-11T22:13:45.840+02:00  INFO 21964 --- [crud] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-11T22:13:46.590+02:00  INFO 21964 --- [crud] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-08-11T22:13:46.948+02:00  INFO 21964 --- [crud] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-11T22:13:49.057+02:00  INFO 21964 --- [crud] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-11T22:13:49.439+02:00  WARN 21964 --- [crud] [main] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-11T22:13:49.518+02:00  INFO 21964 --- [crud] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-08-11T22:13:53.451+02:00  INFO 21964 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseEntity (class must be instantiated by Interceptor)
+2025-08-11T22:13:53.608+02:00  INFO 21964 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:13:53.825+02:00  INFO 21964 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.ExpenseShareholderEntity (class must be instantiated by Interceptor)
+2025-08-11T22:13:53.908+02:00  INFO 21964 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity (class must be instantiated by Interceptor)
+2025-08-11T22:13:53.975+02:00  INFO 21964 --- [crud] [main] o.h.m.i.EntityInstantiatorPojoStandard   : HHH000182: No default (no-argument) constructor for class: com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotGlobalVersionEntity (class must be instantiated by Interceptor)
+2025-08-11T22:13:54.888+02:00  INFO 21964 --- [crud] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-11T22:13:55.228+02:00  INFO 21964 --- [crud] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:13:58.957+02:00  WARN 21964 --- [crud] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-11T22:14:00.958+02:00  INFO 21964 --- [crud] [main] c.k.bluepot.crud.CrudApplicationTests    : Started CrudApplicationTests in 29.77 seconds (process running for 37.724)
+2025-08-11T22:14:03.923+02:00  INFO 21964 --- [crud] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-11T22:14:04.002+02:00  INFO 21964 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-11T22:14:04.033+02:00  INFO 21964 --- [crud] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

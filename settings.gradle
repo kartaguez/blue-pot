@@ -1,1 +1,6 @@
-rootProject.name = 'crud'
+rootProject.name = 'BluePot'
+
+include 'core'
+include 'application'
+include 'crud'
+include 'infra-jpa'
