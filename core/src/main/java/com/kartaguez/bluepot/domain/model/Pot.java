@@ -29,9 +29,9 @@ public class Pot extends VersionedObject {
     private HashMap<UUID, PotShareholder> potShareholders;
     private HashMap<UUID, Expense> expenses;
 
-    private Pot(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
+    private Pot(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
         this.uuid = _uuid;
-        this.targetGlobalVersion = _targetGlobalVersion;
+        this.currentGlobalVersion = _currentGlobalVersion;
         this.createdAtVersion = _createdAtVersion;
         this.deletedAtVersion = _deletedAtVersion;
         this.name = _name;
@@ -47,12 +47,12 @@ public class Pot extends VersionedObject {
         }
     }
 
-    public static Pot hydrateAgregate(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
-        return new Pot(_uuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, _potShareholders, _expenses);
+    public static Pot hydrateAgregate(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder> _potShareholders, HashMap<UUID, Expense> _expenses) {
+        return new Pot(_uuid, _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, _potShareholders, _expenses);
     }
 
-    public static Pot hydrateRoot(@NonNull UUID _uuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
-        return new Pot(_uuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, null, null);
+    public static Pot hydrateRoot(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+        return new Pot(_uuid, _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, null, null);
     }
 
     public static PotMutationResultSet createRoot(@NonNull String _name) {
@@ -70,8 +70,11 @@ public class Pot extends VersionedObject {
         if (Constants.EMPTY_STRING.equals(_name)) {
             throw new IllegalArgumentException("Pot name cannot be empty.");
         }
+
+        Pot renamedPot = new Pot(this.uuid, this.getNextGlobalVersion(), this.getNextGlobalVersion(), Constants.NULL_VERSION, _name, this.potShareholders, this.expenses);
+        this.incrementCurrentGlobalVersion();
         this.markAsDeleted();
-        Pot renamedPot = new Pot(this.uuid, this.targetGlobalVersion, this.targetGlobalVersion, Constants.NULL_VERSION, _name, this.potShareholders, this.expenses);
+        
         return new PotMutationResultSet(this, renamedPot, null);
     }
 
@@ -79,9 +82,12 @@ public class Pot extends VersionedObject {
         if (this.isDeleted()) {
             throw new java.lang.IllegalStateException("Pot deleted.");
         }
-        PotShareholderMutationResultSet potShareholderMutationResultSet = PotShareholder.create(this.uuid, this.targetGlobalVersion, name);
+
+        PotShareholderMutationResultSet potShareholderMutationResultSet = PotShareholder.create(this.uuid, this.getNextGlobalVersion(), name);
         PotShareholder newPotShareholder = potShareholderMutationResultSet.getNewPotShareholderInstance();
         this.potShareholders.put(newPotShareholder.getUuid(), newPotShareholder);
+        this.incrementCurrentGlobalVersion();
+
         return potShareholderMutationResultSet;
     }
 
@@ -97,7 +103,8 @@ public class Pot extends VersionedObject {
         
         PotShareholder updatedPotShareholder = potShareholderMutationResultSet.getNewPotShareholderInstance();
         this.potShareholders.put(potShareholderUuid, updatedPotShareholder);
-        
+        this.incrementCurrentGlobalVersion();
+    
         return potShareholderMutationResultSet;
     }
 
@@ -121,10 +128,12 @@ public class Pot extends VersionedObject {
             throw new IllegalArgumentException("Payee weight cannot be 0.");
         }
 
-        ExpenseMutationResultSet expenseMutationResultSet = Expense.createRoot(this.uuid, this.targetGlobalVersion, payerUuid, amount, label);
+        ExpenseMutationResultSet expenseMutationResultSet = Expense.createRoot(this.uuid, this.getNextGlobalVersion(), payerUuid, amount, label);
         Expense newExpense = expenseMutationResultSet.getNewExpenseInstance();
         List<ExpenseShareholderMutationResultSet> ExpenseShareholderMutationResultSets = new ArrayList<ExpenseShareholderMutationResultSet>(payeeWeights.size());
         payeeWeights.keySet().stream().forEach(potShareholderUuid -> ExpenseShareholderMutationResultSets.add(newExpense.addShareholder(potShareholderUuid, payeeWeights.get(potShareholderUuid))));
+        this.incrementCurrentGlobalVersion();
+    
         return new ExpenseMutationResultSet(null, newExpense, ExpenseShareholderMutationResultSets);
     }
 
@@ -168,9 +177,11 @@ public class Pot extends VersionedObject {
             finalExpenseShareholderMutationResultSets = expenseShareholderMutationResultSets;
         }
 
+        expense.incrementCurrentGlobalVersion();
         expense.markAsDeleted();
         this.expenses.put(expenseUuid, newExpense);
-        
+        this.incrementCurrentGlobalVersion();
+    
         return new ExpenseMutationResultSet(expense, newExpense, finalExpenseShareholderMutationResultSets);
     }
 
@@ -186,8 +197,10 @@ public class Pot extends VersionedObject {
         List<ExpenseShareholderMutationResultSet> expenseShareholderMutationResultSets = new ArrayList<ExpenseShareholderMutationResultSet>(expense.getExpenseShareholders().size());
         
         expense.getExpenseShareholders().keySet().stream().forEach(potShareholderUuid -> expenseShareholderMutationResultSets.add(expense.removeShareholder(potShareholderUuid)));
+        expense.incrementCurrentGlobalVersion();
         expense.markAsDeleted();
-        
+        this.incrementCurrentGlobalVersion();;
+    
         return new ExpenseMutationResultSet(expense, null, expenseShareholderMutationResultSets);
     }
 

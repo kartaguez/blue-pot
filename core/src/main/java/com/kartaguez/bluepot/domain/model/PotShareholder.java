@@ -18,26 +18,26 @@ public class PotShareholder extends VersionedObject {
     
     private String name;
 
-    public PotShareholder(@NonNull UUID _uuid, @NonNull UUID _potUuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+    public PotShareholder(@NonNull UUID _uuid, @NonNull UUID _potUuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
         this.uuid = _uuid;
     
         this.potUuid = _potUuid;
-        this.targetGlobalVersion = _targetGlobalVersion;
+        this.currentGlobalVersion = _currentGlobalVersion;
         this.createdAtVersion = _createdAtVersion;
         this.deletedAtVersion = _deletedAtVersion;
 
         this.name = _name;
     }
 
-    public static PotShareholder hydrateRoot(@NonNull UUID _uuid, @NonNull UUID _potUuid, long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
-        return new PotShareholder(_uuid, _potUuid, _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, _name);
+    public static PotShareholder hydrateRoot(@NonNull UUID _uuid, @NonNull UUID _potUuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+        return new PotShareholder(_uuid, _potUuid, _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, _name);
     }
 
-    public static PotShareholderMutationResultSet create(@NonNull UUID _potUuid, long _targetGlobalVersion, @NonNull String _name) {
+    public static PotShareholderMutationResultSet create(@NonNull UUID _potUuid, long _currentGlobalVersion, @NonNull String _name) {
         if (Constants.EMPTY_STRING.equals(_name)) {
             throw new IllegalArgumentException("Pot Shareholder name cannot be empty.");
         }
-        return new PotShareholderMutationResultSet(null, new PotShareholder(UUID.randomUUID(), _potUuid, _targetGlobalVersion, _targetGlobalVersion, Constants.NULL_VERSION, _name));
+        return new PotShareholderMutationResultSet(null, new PotShareholder(UUID.randomUUID(), _potUuid, _currentGlobalVersion, _currentGlobalVersion, Constants.NULL_VERSION, _name));
     }
 
     public PotShareholderMutationResultSet rename(@NonNull String _name) {
@@ -48,7 +48,7 @@ public class PotShareholder extends VersionedObject {
             throw new IllegalArgumentException("PotShareholder name cannot be empty.");
         }
         
-        PotShareholder renamedPotShareholder = new PotShareholder(this.uuid, this.potUuid, this.targetGlobalVersion, this.targetGlobalVersion, Constants.NULL_VERSION, _name);
+        PotShareholder renamedPotShareholder = new PotShareholder(this.uuid, this.potUuid, this.currentGlobalVersion, this.currentGlobalVersion, Constants.NULL_VERSION, _name);
         this.markAsDeleted();
         
         return new PotShareholderMutationResultSet(this, renamedPotShareholder);

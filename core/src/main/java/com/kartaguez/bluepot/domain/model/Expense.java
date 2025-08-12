@@ -26,10 +26,10 @@ public class Expense extends VersionedObject {
 
     private HashMap<UUID, ExpenseShareholder> expenseShareholders;
 
-    private Expense(@NonNull UUID _uuid, @NonNull UUID _potUuid,  long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull UUID _payerUuid, @NonNull Fraction _amount, @NonNull String _label, @NonNull HashMap<UUID, ExpenseShareholder> _expenseShareholders) {
+    private Expense(@NonNull UUID _uuid, @NonNull UUID _potUuid,  long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull UUID _payerUuid, @NonNull Fraction _amount, @NonNull String _label, @NonNull HashMap<UUID, ExpenseShareholder> _expenseShareholders) {
         this.uuid = _uuid;
         this.potUuid = _potUuid;
-        this.targetGlobalVersion = _targetGlobalVersion;
+        this.currentGlobalVersion = _currentGlobalVersion;
         this.createdAtVersion = _createdAtVersion;
         this.deletedAtVersion = _deletedAtVersion;
         this.payerUuid = _payerUuid;
@@ -38,23 +38,23 @@ public class Expense extends VersionedObject {
         this.expenseShareholders = _expenseShareholders;
     }
 
-    public static Expense hydrateRoot(String _uuid, @NonNull String _potUuid,  long _targetGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _payerUuid, @NonNull String _amount, @NonNull String _label) {
+    public static Expense hydrateRoot(String _uuid, @NonNull String _potUuid,  long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _payerUuid, @NonNull String _amount, @NonNull String _label) {
         UUID hUuid = null;
         if (null != _uuid) {
             hUuid = UUID.fromString(_uuid);
         }
         
-        return new Expense(hUuid, UUID.fromString(_potUuid), _targetGlobalVersion, _createdAtVersion, _deletedAtVersion, UUID.fromString(_payerUuid), Fraction.getFraction(_amount), _label, null);
+        return new Expense(hUuid, UUID.fromString(_potUuid), _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, UUID.fromString(_payerUuid), Fraction.getFraction(_amount), _label, null);
     }
 
-    public static ExpenseMutationResultSet createRoot(@NonNull UUID _potUuid, long _targetGlobalVersion, @NonNull UUID _payerUuid, @NonNull Fraction _amount, @NonNull String _label) {
+    public static ExpenseMutationResultSet createRoot(@NonNull UUID _potUuid, long _currentGlobalVersion, @NonNull UUID _payerUuid, @NonNull Fraction _amount, @NonNull String _label) {
         if (Fraction.ZERO.equals(_amount)) {
             throw new IllegalArgumentException("Expense amount cannot be 0.");
         }
         if (Constants.EMPTY_STRING.equals(_label)) {
             throw new IllegalArgumentException("Expense label cannot be empty.");
         }
-        Expense createdExpense = new Expense(UUID.randomUUID(), _potUuid, _targetGlobalVersion, _targetGlobalVersion, Constants.NULL_VERSION, _payerUuid, _amount, _label, null);
+        Expense createdExpense = new Expense(UUID.randomUUID(), _potUuid, _currentGlobalVersion, _currentGlobalVersion, Constants.NULL_VERSION, _payerUuid, _amount, _label, null);
         return new ExpenseMutationResultSet(null, createdExpense, null);
     }
 
@@ -79,7 +79,7 @@ public class Expense extends VersionedObject {
                 newLabel = _label;
             }
         }
-        Expense updatedExpense = new Expense(this.uuid, this.potUuid, this.targetGlobalVersion, this.targetGlobalVersion, Constants.NULL_VERSION, newPayerUuid, newAmount, newLabel, this.expenseShareholders);
+        Expense updatedExpense = new Expense(this.uuid, this.potUuid, this.currentGlobalVersion, this.currentGlobalVersion, Constants.NULL_VERSION, newPayerUuid, newAmount, newLabel, this.expenseShareholders);
         this.markAsDeleted();
         
         return new ExpenseMutationResultSet(this, updatedExpense, null);
@@ -93,7 +93,7 @@ public class Expense extends VersionedObject {
         if (null != expenseShareholder) {
             throw new IllegalArgumentException("PotShareholder already declared on this expense.");
         }
-        ExpenseShareholderMutationResultSet expenseShareholderMutationResultSet = ExpenseShareholder.createRoot(this.uuid, potShareholderUuid, this.targetGlobalVersion, weight);
+        ExpenseShareholderMutationResultSet expenseShareholderMutationResultSet = ExpenseShareholder.createRoot(this.uuid, potShareholderUuid, this.currentGlobalVersion, weight);
         ExpenseShareholder newExpenseShareholder = expenseShareholderMutationResultSet.getNewExpenseShareholderInstance();
         this.expenseShareholders.put(potShareholderUuid, newExpenseShareholder);
         
@@ -108,7 +108,7 @@ public class Expense extends VersionedObject {
         if (null == expenseShareholder) {
             throw new IllegalArgumentException("PotShareholder not declared on this expense.");
         }
-        ExpenseShareholderMutationResultSet expenseShareholderMutationResultSet = expenseShareholder.updateRoot(this.targetGlobalVersion, weight);
+        ExpenseShareholderMutationResultSet expenseShareholderMutationResultSet = expenseShareholder.updateRoot(this.currentGlobalVersion, weight);
         
         ExpenseShareholder updatedExpenseShareholder = expenseShareholderMutationResultSet.getNewExpenseShareholderInstance();
         this.expenseShareholders.put(potShareholderUuid, updatedExpenseShareholder);
