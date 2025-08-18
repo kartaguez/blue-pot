@@ -16,9 +16,8 @@ public class VersionedObjectUTest {
     void check_PotGlobalVersion_Increment_Version() {
         UUID potUuid = UUID.randomUUID();
         PotGlobalVersion potGlobalVersion = PotGlobalVersion.forNewPot(potUuid);
-        assertEquals(potGlobalVersion.getPotVersion(), Constants.FIRST_VERSION);
-        potGlobalVersion.incrementVersion();
-        assertEquals(potGlobalVersion.getPotVersion(), Constants.FIRST_VERSION + 1);
+        assertEquals(potGlobalVersion.getCurrentPotVersion(), Constants.BEFORE_FIRST_VERSION);
+        assertEquals(potGlobalVersion.getTargetPotVersion(), Constants.FIRST_VERSION);
     }
 
 }

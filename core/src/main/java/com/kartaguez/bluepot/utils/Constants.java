@@ -6,6 +6,8 @@ public final class Constants {
 
      public static final long NULL_VERSION = -1;
      
+     public static final long BEFORE_FIRST_VERSION = 0;
+
      public static final long FIRST_VERSION = 1;
 
 }
