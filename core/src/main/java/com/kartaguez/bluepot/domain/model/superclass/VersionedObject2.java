@@ -30,11 +30,16 @@ public abstract class VersionedObject2<T extends Record> {
 
     protected abstract void updateTargetVersion();
 
-    public void markTargetVersionAsPersisted() {
-        this.baseVersion = this.targetVersion;
-        markInnerObjectsTargetVersionAsPersisted();
+    public void recordTargetVersionPersisted() {
+        this.potGlobalVersion.markTargetVersionAsPersisted();
+        markTargetVersionAsPersisted();
     }
 
-    protected abstract void markInnerObjectsTargetVersionAsPersisted();
+    public void markTargetVersionAsPersisted() {
+        this.baseVersion = this.targetVersion;
+        cascadeTargetVersionPersisted();
+    }
+
+    protected abstract void cascadeTargetVersionPersisted();
 
 }

@@ -60,7 +60,7 @@ public class Pot2 extends VersionedObject2<PotRecord> {
     }
 
     @Override
-    protected void markInnerObjectsTargetVersionAsPersisted() {
+    protected void cascadeTargetVersionPersisted() {
         if (null != this.potShareholders) {
             this.potShareholders.values().stream().forEach(potShareholder -> potShareholder.markTargetVersionAsPersisted());
         }
@@ -132,6 +132,9 @@ public class Pot2 extends VersionedObject2<PotRecord> {
         }
         if (Constants.EMPTY_STRING.equals(label)) {
             throw new IllegalArgumentException("Expense label cannot be empty.");
+        }
+        if (!this.potShareholders.keySet().contains(payerUuid)) {
+            throw new IllegalArgumentException("Payer does not belong to the pot.");
         }
         if (0 == payeeWeights.size()) {
             throw new IllegalArgumentException("Payees list cannot be empty.");

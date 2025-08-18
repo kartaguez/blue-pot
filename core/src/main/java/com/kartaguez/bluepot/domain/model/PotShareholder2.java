@@ -46,7 +46,7 @@ public class PotShareholder2 extends VersionedObject2<PotShareholderRecord> {
     }
 
     @Override
-    protected void markInnerObjectsTargetVersionAsPersisted() {
+    protected void cascadeTargetVersionPersisted() {
         return;
     }
 
