@@ -2,11 +2,11 @@ package com.kartaguez.bluepot.application.down.repository;
 
 import java.util.UUID;
 
-import com.kartaguez.bluepot.domain.model.Pot;
+import com.kartaguez.bluepot.domain.model.Pot_old1;
 
 public interface PotRepository {
 
-    public Pot loadPotByUuid(UUID potUuid, long targetGlobalVersion);
+    public Pot_old1 loadPotByUuid(UUID potUuid, long targetGlobalVersion);
 
-    public Pot save(Pot pot);
+    public Pot_old1 save(Pot_old1 pot);
 }

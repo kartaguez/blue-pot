@@ -1,0 +1,207 @@
+package com.kartaguez.bluepot.domain.model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang3.math.Fraction;
+
+import com.kartaguez.bluepot.domain.model.mutation.ExpenseMutationResultSet;
+import com.kartaguez.bluepot.domain.model.mutation.ExpenseShareholderMutationResultSet;
+import com.kartaguez.bluepot.domain.model.mutation.PotMutationResultSet;
+import com.kartaguez.bluepot.domain.model.mutation.PotShareholderMutationResultSet;
+import com.kartaguez.bluepot.domain.model.superclass.VersionedObject;
+import com.kartaguez.bluepot.utils.Constants;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.ToString;
+
+@Getter
+@EqualsAndHashCode(callSuper=false)
+@ToString
+public class Pot_old1 extends VersionedObject {
+
+    private String name;
+
+    private HashMap<UUID, PotShareholder_old1> potShareholders;
+    private HashMap<UUID, Expense> expenses;
+
+    private Pot_old1(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder_old1> _potShareholders, HashMap<UUID, Expense> _expenses) {
+        this.uuid = _uuid;
+        this.currentGlobalVersion = _currentGlobalVersion;
+        this.createdAtVersion = _createdAtVersion;
+        this.deletedAtVersion = _deletedAtVersion;
+        this.name = _name;
+        if (null == _potShareholders) {
+            this.potShareholders = new HashMap<UUID, PotShareholder_old1>();
+        } else {
+            this.potShareholders = _potShareholders;
+        }
+        if (null == _expenses) {
+            this.expenses = new HashMap<UUID, Expense>();
+        } else {
+            this.expenses = _expenses;
+        }
+    }
+
+    public static Pot_old1 hydrateAgregate(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name, HashMap<UUID, PotShareholder_old1> _potShareholders, HashMap<UUID, Expense> _expenses) {
+        return new Pot_old1(_uuid, _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, _potShareholders, _expenses);
+    }
+
+    public static Pot_old1 hydrateRoot(@NonNull UUID _uuid, long _currentGlobalVersion, long _createdAtVersion, long _deletedAtVersion, @NonNull String _name) {
+        return new Pot_old1(_uuid, _currentGlobalVersion, _createdAtVersion, _deletedAtVersion, _name, null, null);
+    }
+
+    public static PotMutationResultSet createRoot(@NonNull String _name) {
+        if (Constants.EMPTY_STRING.equals(_name)) {
+            throw new IllegalArgumentException("Pot name cannot be empty.");
+        }
+        Pot_old1 createdPot = new Pot_old1(UUID.randomUUID(), Constants.FIRST_VERSION, Constants.FIRST_VERSION, Constants.NULL_VERSION, _name, null, null);
+        return new PotMutationResultSet(null, createdPot, null);
+    }
+
+    public PotMutationResultSet updateRoot(@NonNull String _name) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Pot deleted.");
+        }
+        if (Constants.EMPTY_STRING.equals(_name)) {
+            throw new IllegalArgumentException("Pot name cannot be empty.");
+        }
+
+        Pot_old1 renamedPot = new Pot_old1(this.uuid, this.getNextGlobalVersion(), this.getNextGlobalVersion(), Constants.NULL_VERSION, _name, this.potShareholders, this.expenses);
+        this.incrementCurrentGlobalVersion();
+        this.markAsDeleted();
+        
+        return new PotMutationResultSet(this, renamedPot, null);
+    }
+
+    public PotShareholderMutationResultSet addPotShareholder(@NonNull String name) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Pot deleted.");
+        }
+
+        PotShareholderMutationResultSet potShareholderMutationResultSet = PotShareholder_old1.create(this.uuid, this.getNextGlobalVersion(), name);
+        PotShareholder_old1 newPotShareholder = potShareholderMutationResultSet.getNewPotShareholderInstance();
+        this.potShareholders.put(newPotShareholder.getUuid(), newPotShareholder);
+        this.incrementCurrentGlobalVersion();
+
+        return potShareholderMutationResultSet;
+    }
+
+    public PotShareholderMutationResultSet updatePotShareholder(@NonNull UUID potShareholderUuid, @NonNull String _name) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Pot deleted.");
+        }
+        PotShareholder_old1 potShareholder = this.potShareholders.get(potShareholderUuid);
+        if (null == potShareholder) {
+            throw new IllegalArgumentException("UUID matches no PotShareholder in the pot.");
+        }
+        PotShareholderMutationResultSet potShareholderMutationResultSet = potShareholder.rename(_name);
+        
+        PotShareholder_old1 updatedPotShareholder = potShareholderMutationResultSet.getNewPotShareholderInstance();
+        this.potShareholders.put(potShareholderUuid, updatedPotShareholder);
+        this.incrementCurrentGlobalVersion();
+    
+        return potShareholderMutationResultSet;
+    }
+
+    public ExpenseMutationResultSet addExpense(@NonNull UUID payerUuid, @NonNull HashMap<UUID, Fraction> payeeWeights, @NonNull Fraction amount, @NonNull String label) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Pot deleted.");
+        }
+        if (Fraction.ZERO.equals(amount)) {
+            throw new IllegalArgumentException("Expense amount cannot be 0.");
+        }
+        if (Constants.EMPTY_STRING.equals(label)) {
+            throw new IllegalArgumentException("Expense label cannot be empty.");
+        }
+        if (0 == payeeWeights.size()) {
+            throw new IllegalArgumentException("Payees list cannot be empty.");
+        }
+        if (!this.potShareholders.keySet().containsAll(payeeWeights.keySet())) {
+            throw new IllegalArgumentException("At least one payee does not belong to the pot.");
+        }
+        if (payeeWeights.values().contains(Fraction.ZERO)) {
+            throw new IllegalArgumentException("Payee weight cannot be 0.");
+        }
+
+        ExpenseMutationResultSet expenseMutationResultSet = Expense.createRoot(this.uuid, this.getNextGlobalVersion(), payerUuid, amount, label);
+        Expense newExpense = expenseMutationResultSet.getNewExpenseInstance();
+        List<ExpenseShareholderMutationResultSet> ExpenseShareholderMutationResultSets = new ArrayList<ExpenseShareholderMutationResultSet>(payeeWeights.size());
+        payeeWeights.keySet().stream().forEach(potShareholderUuid -> ExpenseShareholderMutationResultSets.add(newExpense.addShareholder(potShareholderUuid, payeeWeights.get(potShareholderUuid))));
+        this.incrementCurrentGlobalVersion();
+    
+        return new ExpenseMutationResultSet(null, newExpense, ExpenseShareholderMutationResultSets);
+    }
+
+    public ExpenseMutationResultSet updateExpense(@NonNull UUID expenseUuid, UUID payerUuid, HashMap<UUID, Fraction> payeeWeights, Fraction amount, String label) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Pot deleted.");
+        }
+        if (null != amount && Fraction.ZERO.equals(amount)) {
+            throw new IllegalArgumentException("Expense amount cannot be 0.");
+        }
+        if (null != label && Constants.EMPTY_STRING.equals(label)) {
+            throw new IllegalArgumentException("Expense label cannot be empty.");
+        }
+        if (null != payeeWeights) {
+            if (0 == payeeWeights.size()) {
+                throw new IllegalArgumentException("Payees list cannot be empty.");
+            }
+            if (!this.potShareholders.keySet().containsAll(payeeWeights.keySet())) {
+                throw new IllegalArgumentException("At least one payee does not belong to the pot.");
+            }
+            if (payeeWeights.values().contains(Fraction.ZERO)) {
+                throw new IllegalArgumentException("Payee weight cannot be 0.");
+            }
+        }
+
+        Expense expense = this.expenses.get(expenseUuid);
+        if (null == expense) {
+            throw new IllegalArgumentException("Expense not declared on this pot.");
+        }
+        ExpenseMutationResultSet expenseMutationResultSet = expense.updateRoot(payerUuid, amount, label);
+        
+        Expense newExpense = expenseMutationResultSet.getNewExpenseInstance();
+        List<ExpenseShareholderMutationResultSet> finalExpenseShareholderMutationResultSets = null;
+        
+        if (null != payeeWeights) {
+            List<ExpenseShareholderMutationResultSet> expenseShareholderMutationResultSets = new ArrayList<ExpenseShareholderMutationResultSet>(expense.getExpenseShareholders().size() + payeeWeights.size());
+        
+            payeeWeights.keySet().stream().forEach(potShareholderUuid -> expenseShareholderMutationResultSets.add(newExpense.addShareholder(potShareholderUuid, payeeWeights.get(potShareholderUuid))));
+            newExpense.getExpenseShareholders().keySet().stream().forEach(potShareholderUuid -> expenseShareholderMutationResultSets.add(newExpense.removeShareholder(potShareholderUuid)));
+
+            finalExpenseShareholderMutationResultSets = expenseShareholderMutationResultSets;
+        }
+
+        expense.incrementCurrentGlobalVersion();
+        expense.markAsDeleted();
+        this.expenses.put(expenseUuid, newExpense);
+        this.incrementCurrentGlobalVersion();
+    
+        return new ExpenseMutationResultSet(expense, newExpense, finalExpenseShareholderMutationResultSets);
+    }
+
+    public ExpenseMutationResultSet deleteExpense(@NonNull UUID expenseUuid) {
+        if (this.isDeleted()) {
+            throw new java.lang.IllegalStateException("Expense already deleted.");
+        }
+        Expense expense = this.expenses.get(expenseUuid);
+        if (null == expense) {
+            throw new IllegalArgumentException("Expense not declared on this pot.");
+        }
+
+        List<ExpenseShareholderMutationResultSet> expenseShareholderMutationResultSets = new ArrayList<ExpenseShareholderMutationResultSet>(expense.getExpenseShareholders().size());
+        
+        expense.getExpenseShareholders().keySet().stream().forEach(potShareholderUuid -> expenseShareholderMutationResultSets.add(expense.removeShareholder(potShareholderUuid)));
+        expense.incrementCurrentGlobalVersion();
+        expense.markAsDeleted();
+        this.incrementCurrentGlobalVersion();;
+    
+        return new ExpenseMutationResultSet(expense, null, expenseShareholderMutationResultSets);
+    }
+
+}

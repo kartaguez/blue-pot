@@ -1,10 +1,12 @@
 package com.kartaguez.bluepot.domain.model.superclass;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
 
 import lombok.Data;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Data
@@ -14,8 +16,15 @@ public abstract class VersionedObject2<T extends Record> {
     protected PotGlobalVersion potGlobalVersion;
     protected UUID uuid;
     protected boolean deleted;
-    protected T baseVersion;
-    protected T targetVersion;
+    protected HashMap<Long, T> versionRecords;
+
+    protected VersionedObject2(@NonNull PotGlobalVersion _potGlobalVersion, T baseRecord) {
+
+        this.potGlobalVersion = _potGlobalVersion;
+        this.versionRecords = new HashMap<Long, T>();
+        this.versionRecords.put(this.potGlobalVersion.getCurrentPotVersion(), baseRecord);
+
+    }
 
     public void markAsDeleted() {
         if (this.isDeleted()) {
@@ -28,18 +37,23 @@ public abstract class VersionedObject2<T extends Record> {
         return this.deleted;
     }
 
-    protected abstract void updateTargetVersion();
-
-    public void recordTargetVersionPersisted() {
-        this.potGlobalVersion.markTargetVersionAsPersisted();
-        markTargetVersionAsPersisted();
+    protected void updateTargetVersionRecord() {
+        T targetVersionRecord = this.createTargetVersionRecord();
+        versionRecords.put(this.potGlobalVersion.getTargetPotVersion(), targetVersionRecord);
     }
 
-    public void markTargetVersionAsPersisted() {
-        this.baseVersion = this.targetVersion;
-        cascadeTargetVersionPersisted();
+    protected abstract T createTargetVersionRecord();
+
+    public void incrementTargetVersion() {
+        this.potGlobalVersion.incrementTargetVersion();
+        setCurrentVersionRecordAsBaseTargetVersionRecord();
     }
 
-    protected abstract void cascadeTargetVersionPersisted();
+    public void setCurrentVersionRecordAsBaseTargetVersionRecord() {
+        versionRecords.put(this.potGlobalVersion.getTargetPotVersion(), versionRecords.get(this.potGlobalVersion.getCurrentPotVersion()));
+        cascadeSetCurrentVersionRecordAsBaseTargetVersionRecord();
+    }
+
+    protected abstract void cascadeSetCurrentVersionRecordAsBaseTargetVersionRecord();
 
 }

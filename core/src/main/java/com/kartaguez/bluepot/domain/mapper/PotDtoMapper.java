@@ -1,13 +1,13 @@
 package com.kartaguez.bluepot.domain.mapper;
 
 import com.kartaguez.bluepot.domain.dto.PotDto;
-import com.kartaguez.bluepot.domain.model.Pot;
+import com.kartaguez.bluepot.domain.model.Pot_old1;
 
 import lombok.NonNull;
 
 public class PotDtoMapper {
 
-    public static PotDto toDto(@NonNull Pot pot) {
+    public static PotDto toDto(@NonNull Pot_old1 pot) {
         String tUuid = null;
         if (null != pot.getUuid()) {
             tUuid = pot.getUuid().toString();

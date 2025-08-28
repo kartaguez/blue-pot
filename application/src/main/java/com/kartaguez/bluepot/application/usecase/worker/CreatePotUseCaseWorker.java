@@ -6,10 +6,8 @@ import com.kartaguez.bluepot.application.down.repository.PotShareholderRepositor
 import com.kartaguez.bluepot.application.usecase.dto.CreatePotDtoIn;
 import com.kartaguez.bluepot.application.usecase.dto.CreatePotDtoOut;
 import com.kartaguez.bluepot.application.usecase.mapper.CreatePotDtoOutMapper;
-import com.kartaguez.bluepot.domain.model.Pot;
+import com.kartaguez.bluepot.domain.model.Pot_old1;
 import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
-
-import lombok.extern.log4j.Log4j2;
 
 //@Log4j2
 public class CreatePotUseCaseWorker {
@@ -19,7 +17,7 @@ public class CreatePotUseCaseWorker {
     private PotShareholderRepository potShareholderRepository;
     private CreatePotDtoIn createPotDtoIn;
     private PotGlobalVersion potGlobalVersion;
-    private Pot pot;
+    private Pot_old1 pot;
 
     public static CreatePotUseCaseWorker getNewInstance(PotGlobalVersionRepository _potGlobalVersionRepository, PotRepository _potRepository, PotShareholderRepository _potShareholderRepository) {
         return new CreatePotUseCaseWorker(_potGlobalVersionRepository, _potRepository, _potShareholderRepository);
@@ -52,10 +50,10 @@ public class CreatePotUseCaseWorker {
     }
 
     private CreatePotUseCaseWorker createPot() {
-        this.pot = Pot.createRoot(this.createPotDtoIn.getPotDto().getName()).getNewPotInstance();
+        this.pot = Pot_old1.createRoot(this.createPotDtoIn.getPotDto().getName()).getNewPotInstance();
         //log.info(this.pot.toString());
 
-        this.potGlobalVersion = PotGlobalVersion.create(this.pot.getUuid());
+        this.potGlobalVersion = PotGlobalVersion.forNewPot(this.pot.getUuid());
         //log.info(this.potGlobalVersion.toString());
 
         this.createPotDtoIn.getPotShareholderDtos().stream().forEach(potShareholderDto -> this.pot.addPotShareholder(potShareholderDto.getName()));

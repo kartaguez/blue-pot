@@ -13,7 +13,7 @@ import com.kartaguez.bluepot.application.usecase.dto.AddExpenseDtoOut;
 import com.kartaguez.bluepot.application.usecase.mapper.AddExpenseDtoOutMapper;
 import com.kartaguez.bluepot.domain.mapper.ExpenseShareholderDtoMapper;
 import com.kartaguez.bluepot.domain.model.Expense;
-import com.kartaguez.bluepot.domain.model.Pot;
+import com.kartaguez.bluepot.domain.model.Pot_old1;
 import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
 import com.kartaguez.bluepot.utils.Constants;
 
@@ -24,7 +24,7 @@ public class AddExpenseUseCaseWorker {
     private ExpenseRepository expenseRepository;
     private AddExpenseDtoIn addExpenseDtoIn;
     private PotGlobalVersion potGlobalVersion;
-    private Pot pot;
+    private Pot_old1 pot;
     private Expense expense;
 
     public static AddExpenseUseCaseWorker getNewInstance(PotGlobalVersionRepository _potGlobalVersionRepository, PotRepository _potRepository, ExpenseRepository _expenseRepository) {

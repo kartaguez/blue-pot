@@ -19,61 +19,50 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode(callSuper=false)
 @ToString
-public class Pot2 extends VersionedObject2<PotRecord> {
+public class Pot_old2 extends VersionedObject2<PotRecord> {
 
     private String name;
 
-    private HashMap<UUID, PotShareholder2> potShareholders;
+    private HashMap<UUID, PotShareholder_old2> potShareholders;
     // private HashMap<UUID, Expense> expenses;
 
-    private Pot2(@NonNull PotGlobalVersion _potGlobalVersion, PotRecord potRecord, List<PotShareholderRecord> potShareholderRecords) {
-        
+    private Pot_old2(@NonNull PotGlobalVersion _potGlobalVersion, PotRecord potRecord, List<PotShareholderRecord> potShareholderRecords) {
+        super(_potGlobalVersion, potRecord);
+
+        if (null == _potGlobalVersion.getPotUuid()) {
+            throw new IllegalArgumentException("PotGlobalVersion PotUuid cannot be null.");
+        }
+
         if (potRecord != null && !_potGlobalVersion.getPotUuid().equals(potRecord.uuid())) {
             throw new IllegalArgumentException("Pot Uuid does not match PotGlobalVersion PotUuid.");
         }
 
-        if (potShareholderRecords != null) {
-            this.potShareholders = new HashMap<UUID, PotShareholder2>();
-            potShareholderRecords.stream().map(potShareholderRecord -> this.potShareholders.put(potShareholderRecord.uuid(), PotShareholder2.hydrateFromRecord(_potGlobalVersion, potShareholderRecord)));
-        }
-
-        this.potGlobalVersion = _potGlobalVersion;
         this.uuid = _potGlobalVersion.getPotUuid();
-
-        this.baseVersion = potRecord;
-
         if (potRecord != null) {
             this.deleted = potRecord.deleted();
             this.name = potRecord.name();
         }
 
-        this.targetVersion = this.baseVersion;
-
-    }
-
-    public static Pot2 hydrateFromRecords(@NonNull PotGlobalVersion _PotGlobalVersion, PotRecord potRecord, List<PotShareholderRecord> potShareholderRecords) {
-        return new Pot2(_PotGlobalVersion, potRecord, potShareholderRecords);
-    }
-
-    protected void updateTargetVersion() {
-        this.targetVersion = new PotRecord(this.getPotGlobalVersion().getPotUuid(), this.isDeleted(), this.getPotGlobalVersion().getTargetPotVersion(), Constants.NULL_VERSION, this.getName());
-    }
-
-    @Override
-    protected void cascadeTargetVersionPersisted() {
-        if (null != this.potShareholders) {
-            this.potShareholders.values().stream().forEach(potShareholder -> potShareholder.markTargetVersionAsPersisted());
+        this.potShareholders = new HashMap<UUID, PotShareholder_old2>();
+        if (potShareholderRecords != null) {
+            potShareholderRecords.stream().map(potShareholderRecord -> this.potShareholders.put(potShareholderRecord.uuid(), PotShareholder_old2.hydrateFromRecord(_potGlobalVersion, potShareholderRecord)));
         }
+
+        this.setCurrentVersionRecordAsBaseTargetVersionRecord();
     }
 
-    public static Pot2 create(@NonNull String _name) {
+    public static Pot_old2 hydrateFromRecords(@NonNull PotGlobalVersion _PotGlobalVersion, PotRecord potRecord, List<PotShareholderRecord> potShareholderRecords) {
+        return new Pot_old2(_PotGlobalVersion, potRecord, potShareholderRecords);
+    }
+
+    public static Pot_old2 create(@NonNull String _name) {
         if (Constants.EMPTY_STRING.equals(_name)) {
             throw new IllegalArgumentException("Pot name cannot be empty.");
         }
 
         UUID newPotUuid = UUID.randomUUID();
         PotGlobalVersion potGlobalVersion = PotGlobalVersion.forNewPot(newPotUuid);
-        Pot2 newPot = new Pot2(potGlobalVersion, null, null);
+        Pot_old2 newPot = new Pot_old2(potGlobalVersion, null, null);
         
         newPot.uuid = newPotUuid;
 
@@ -92,10 +81,10 @@ public class Pot2 extends VersionedObject2<PotRecord> {
 
         this.name = _name;
 
-        this.updateTargetVersion();
+        this.updateTargetVersionRecord();
     }
 
-    public void addPotShareholder(@NonNull String name) {
+    public UUID addPotShareholder(@NonNull String name) {
         if (this.isDeleted()) {
             throw new java.lang.IllegalStateException("Pot deleted.");
         }
@@ -103,24 +92,27 @@ public class Pot2 extends VersionedObject2<PotRecord> {
             throw new IllegalArgumentException("PotShareholder name cannot be empty.");
         }
 
-        PotShareholder2 newPotShareholder = PotShareholder2.create(this.potGlobalVersion, name);
+        PotShareholder_old2 newPotShareholder = PotShareholder_old2.create(this.potGlobalVersion, name);
 
         if (null == this.potShareholders) {
-            this.potShareholders = new HashMap<UUID, PotShareholder2>();
+            this.potShareholders = new HashMap<UUID, PotShareholder_old2>();
         }
         this.potShareholders.put(newPotShareholder.getUuid(), newPotShareholder);
  
+        return newPotShareholder.getUuid();
     }
 
-    public void updatePotShareholder(@NonNull UUID potShareholderUuid, @NonNull String _name) {
+    public UUID updatePotShareholder(@NonNull UUID potShareholderUuid, @NonNull String _name) {
         if (this.isDeleted()) {
             throw new java.lang.IllegalStateException("Pot deleted.");
         }
-        PotShareholder2 potShareholder = this.potShareholders.get(potShareholderUuid);
+        PotShareholder_old2 potShareholder = this.potShareholders.get(potShareholderUuid);
         if (null == potShareholder) {
             throw new IllegalArgumentException("UUID matches no PotShareholder in the pot.");
         }
         potShareholder.rename(_name);
+
+        return potShareholder.getUuid();
     }
 
     public void addExpense(@NonNull UUID payerUuid, @NonNull HashMap<UUID, Fraction> payeeWeights, @NonNull Fraction amount, @NonNull String label) {
@@ -179,6 +171,18 @@ public class Pot2 extends VersionedObject2<PotRecord> {
             throw new java.lang.IllegalStateException("Expense already deleted.");
         }
         // TODO Implement
+    }
+
+    @Override
+    protected PotRecord createTargetVersionRecord() {
+        return new PotRecord(this.uuid, this.deleted, this.potGlobalVersion.getTargetPotVersion(), Constants.NULL_VERSION, this.name);
+    }
+
+    @Override
+    protected void cascadeSetCurrentVersionRecordAsBaseTargetVersionRecord() {
+        if (null != this.potShareholders) {
+            this.potShareholders.values().stream().forEach(potShareholder -> potShareholder.setCurrentVersionRecordAsBaseTargetVersionRecord());
+        }
     }
 
 }

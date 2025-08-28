@@ -34,7 +34,7 @@ public class PotGlobalVersion {
         return this.currentPotVersion - 1;
     }
 
-    public void markTargetVersionAsPersisted() {
+    public void incrementTargetVersion() {
         this.currentPotVersion = this.targetPotVersion;
         updateTargetPotVersion();
     }

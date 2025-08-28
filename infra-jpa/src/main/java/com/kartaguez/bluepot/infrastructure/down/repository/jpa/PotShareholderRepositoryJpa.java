@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.kartaguez.bluepot.application.down.repository.PotShareholderRepository;
-import com.kartaguez.bluepot.domain.model.PotShareholder;
+import com.kartaguez.bluepot.domain.model.PotShareholder_old1;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotShareholderEntity;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper.PotShareholderEntityMapper;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.wrapped.PotShareholderEntityJpaRepository;
@@ -23,20 +23,20 @@ public class PotShareholderRepositoryJpa implements PotShareholderRepository {
     private final PotShareholderEntityMapper potShareholderEntityMapper;
 
     @Override
-    public PotShareholder loadPotShareholderByUuid(@NonNull UUID uuid, long targetGlobalVersion) {
+    public PotShareholder_old1 loadPotShareholderByUuid(@NonNull UUID uuid, long targetGlobalVersion) {
         PotShareholderEntity potShareholderEntity = this.potShareholderEntityJpaRepository.findByUuid(uuid);
         return this.potShareholderEntityMapper.toDomain(potShareholderEntity, targetGlobalVersion);
     }
 
-    private PotShareholder save(@NonNull PotShareholder potShareholder) {
+    private PotShareholder_old1 save(@NonNull PotShareholder_old1 potShareholder) {
         PotShareholderEntity potShareholderEntity = this.potShareholderEntityMapper.toEntity(potShareholder);
         potShareholderEntity = this.potShareholderEntityJpaRepository.save(potShareholderEntity);
-        return this.potShareholderEntityMapper.toDomain(potShareholderEntity, potShareholder.getTargetGlobalVersion());
+        return this.potShareholderEntityMapper.toDomain(potShareholderEntity, potShareholder.getNextGlobalVersion());
     }
 
     @Override
-    public Collection<PotShareholder> saveAll(@NonNull Collection<PotShareholder> potShareholders) {
-        Collection<PotShareholder> potShareholderEntities = new ArrayList<PotShareholder>();
+    public Collection<PotShareholder_old1> saveAll(@NonNull Collection<PotShareholder_old1> potShareholders) {
+        Collection<PotShareholder_old1> potShareholderEntities = new ArrayList<PotShareholder_old1>();
         potShareholders.stream().forEach(potShareholder -> potShareholderEntities.add(this.save(potShareholder)));
         return potShareholderEntities;
     }
