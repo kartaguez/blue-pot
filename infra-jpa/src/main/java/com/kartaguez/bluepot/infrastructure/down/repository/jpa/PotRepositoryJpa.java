@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.kartaguez.bluepot.application.down.repository.PotRepository;
-import com.kartaguez.bluepot.domain.model.Pot_old1;
+import com.kartaguez.bluepot.domain._to_delete.model.Pot_old1;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper.PotEntityMapper;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.wrapped.PotEntityJpaRepository;

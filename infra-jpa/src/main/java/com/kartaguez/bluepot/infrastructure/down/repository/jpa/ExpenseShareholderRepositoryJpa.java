@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.kartaguez.bluepot.application.down.repository.ExpenseShareholderRepository;
-import com.kartaguez.bluepot.domain.model.ExpenseShareholder;
+import com.kartaguez.bluepot.domain._to_delete.model.ExpenseShareholder;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper.ExpenseShareholderEntityMapper;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.wrapped.ExpenseShareholderEntityJpaRepository;
 

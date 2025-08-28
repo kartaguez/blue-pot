@@ -6,8 +6,8 @@ import com.kartaguez.bluepot.application.down.repository.PotShareholderRepositor
 import com.kartaguez.bluepot.application.usecase.dto.CreatePotDtoIn;
 import com.kartaguez.bluepot.application.usecase.dto.CreatePotDtoOut;
 import com.kartaguez.bluepot.application.usecase.mapper.CreatePotDtoOutMapper;
-import com.kartaguez.bluepot.domain.model.Pot_old1;
-import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
+import com.kartaguez.bluepot.domain._to_delete.model.PotGlobalVersion;
+import com.kartaguez.bluepot.domain._to_delete.model.Pot_old1;
 
 //@Log4j2
 public class CreatePotUseCaseWorker {

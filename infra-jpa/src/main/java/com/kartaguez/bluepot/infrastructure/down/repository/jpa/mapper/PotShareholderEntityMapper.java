@@ -2,7 +2,7 @@ package com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.kartaguez.bluepot.domain.model.PotShareholder_old1;
+import com.kartaguez.bluepot.domain._to_delete.model.PotShareholder_old1;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotShareholderEntity;
 import com.kartaguez.bluepot.utils.Constants;
 

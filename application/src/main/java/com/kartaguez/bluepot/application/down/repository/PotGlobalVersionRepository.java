@@ -2,7 +2,7 @@ package com.kartaguez.bluepot.application.down.repository;
 
 import java.util.UUID;
 
-import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
+import com.kartaguez.bluepot.domain._to_delete.model.PotGlobalVersion;
 
 public interface PotGlobalVersionRepository {
 

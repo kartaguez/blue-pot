@@ -11,10 +11,10 @@ import com.kartaguez.bluepot.application.down.repository.PotRepository;
 import com.kartaguez.bluepot.application.usecase.dto.AddExpenseDtoIn;
 import com.kartaguez.bluepot.application.usecase.dto.AddExpenseDtoOut;
 import com.kartaguez.bluepot.application.usecase.mapper.AddExpenseDtoOutMapper;
-import com.kartaguez.bluepot.domain.mapper.ExpenseShareholderDtoMapper;
-import com.kartaguez.bluepot.domain.model.Expense;
-import com.kartaguez.bluepot.domain.model.Pot_old1;
-import com.kartaguez.bluepot.domain.model.PotGlobalVersion;
+import com.kartaguez.bluepot.domain._to_delete.mapper.ExpenseShareholderDtoMapper;
+import com.kartaguez.bluepot.domain._to_delete.model.Expense;
+import com.kartaguez.bluepot.domain._to_delete.model.PotGlobalVersion;
+import com.kartaguez.bluepot.domain._to_delete.model.Pot_old1;
 import com.kartaguez.bluepot.utils.Constants;
 
 public class AddExpenseUseCaseWorker {

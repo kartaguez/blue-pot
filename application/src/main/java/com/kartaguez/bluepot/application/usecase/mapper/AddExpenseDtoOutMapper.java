@@ -1,9 +1,9 @@
 package com.kartaguez.bluepot.application.usecase.mapper;
 
 import com.kartaguez.bluepot.application.usecase.dto.AddExpenseDtoOut;
-import com.kartaguez.bluepot.domain.mapper.ExpenseDtoMapper;
-import com.kartaguez.bluepot.domain.mapper.ExpenseShareholderDtoMapper;
-import com.kartaguez.bluepot.domain.model.Expense;
+import com.kartaguez.bluepot.domain._to_delete.mapper.ExpenseDtoMapper;
+import com.kartaguez.bluepot.domain._to_delete.mapper.ExpenseShareholderDtoMapper;
+import com.kartaguez.bluepot.domain._to_delete.model.Expense;
 
 import lombok.Data;
 import lombok.NonNull;

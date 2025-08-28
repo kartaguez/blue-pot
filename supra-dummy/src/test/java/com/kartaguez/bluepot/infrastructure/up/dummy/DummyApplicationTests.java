@@ -10,8 +10,8 @@ import org.springframework.test.context.TestConstructor;
 
 import com.kartaguez.bluepot.application.usecase.CreatePotUseCase;
 import com.kartaguez.bluepot.application.usecase.dto.CreatePotDtoIn;
-import com.kartaguez.bluepot.domain.dto.PotDto;
-import com.kartaguez.bluepot.domain.dto.PotShareholderDto;
+import com.kartaguez.bluepot.domain._to_delete.dto.PotDto;
+import com.kartaguez.bluepot.domain._to_delete.dto.PotShareholderDto;
 
 import lombok.RequiredArgsConstructor;
 

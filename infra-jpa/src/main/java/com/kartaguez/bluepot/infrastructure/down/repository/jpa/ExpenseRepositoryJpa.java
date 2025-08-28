@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.kartaguez.bluepot.application.down.repository.ExpenseRepository;
-import com.kartaguez.bluepot.domain.model.Expense;
+import com.kartaguez.bluepot.domain._to_delete.model.Expense;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper.ExpenseEntityMapper;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.wrapped.ExpenseEntityJpaRepository;
 

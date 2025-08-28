@@ -1,6 +1,6 @@
 package com.kartaguez.bluepot.application.down.repository;
 
-import com.kartaguez.bluepot.domain.model.Expense;
+import com.kartaguez.bluepot.domain._to_delete.model.Expense;
 
 public interface ExpenseRepository {
 
