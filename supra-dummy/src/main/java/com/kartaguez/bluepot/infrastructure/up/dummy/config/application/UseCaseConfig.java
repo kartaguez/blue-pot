@@ -4,11 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import com.kartaguez.bluepot.application.down.repository.ExpenseRepository;
-import com.kartaguez.bluepot.application.down.repository.ExpenseShareholderRepository;
-import com.kartaguez.bluepot.application.down.repository.PotGlobalVersionRepository;
-import com.kartaguez.bluepot.application.down.repository.PotRepository;
-import com.kartaguez.bluepot.application.down.repository.PotShareholderRepository;
+import com.kartaguez.bluepot.application._to_delete.down.repository.ExpenseRepository;
+import com.kartaguez.bluepot.application._to_delete.down.repository.ExpenseShareholderRepository;
+import com.kartaguez.bluepot.application._to_delete.down.repository.PotGlobalVersionRepository;
+import com.kartaguez.bluepot.application._to_delete.down.repository.PotRepository;
+import com.kartaguez.bluepot.application._to_delete.down.repository.PotShareholderRepository;
 import com.kartaguez.bluepot.application.usecase.CreatePotUseCase;
 
 import lombok.Data;
