@@ -11,11 +11,11 @@ import lombok.NonNull;
 public class PotGlobalVersionEntityMapper {
 
     public PotGlobalVersion toDomain(@NonNull PotGlobalVersionEntity potGlobalVersionEntity) {
-        return PotGlobalVersion.hydrateRoot(potGlobalVersionEntity.getId(), potGlobalVersionEntity.getPotUuid(), potGlobalVersionEntity.getPotVersion());
+        return null;
     }
 
     public PotGlobalVersionEntity toEntity(@NonNull PotGlobalVersion potGlobalVersion) {
-        return new PotGlobalVersionEntity(potGlobalVersion.getId(), potGlobalVersion.getPotUuid(), potGlobalVersion.getPotVersion());
+        return null;
     }
 
 }

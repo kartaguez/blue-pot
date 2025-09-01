@@ -28,7 +28,7 @@ public class UseCaseConfig {
 
     @Bean
     public CreatePotUseCase createPotUseCase() {
-        return new CreatePotUseCase(this.potGlobalVersionRepository, this.potRepository, this.potShareholderRepository);
+        return new CreatePotUseCase();
     }
 
 }

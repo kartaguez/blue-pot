@@ -60,4 +60,17 @@ public class Pot {
         return trimmedName;
     }
 
+    public void renamePotShareholder(UUID potShareholderUUid, String newPotShareholderName) {
+        if (null == potShareholderUUid) {
+            throw new IllegalArgumentException("PotShareholder Uuid cannot be null.");
+        }
+        if (null == this.potShareholders.get(potShareholderUUid)) {
+            throw new IllegalArgumentException("Uuid does not belong to PotShareholder's Uuids.");
+        }
+        if (this.getPotShareholders().values().stream().anyMatch(potShareholder -> !potShareholderUUid.equals(potShareholder.getUuid()) && newPotShareholderName.equals(potShareholder.getName()))) {
+            throw new IllegalArgumentException("New PotShareholder name already exists.");
+        }
+        this.potShareholders.get(potShareholderUUid).rename(newPotShareholderName);
+    }
+
 }

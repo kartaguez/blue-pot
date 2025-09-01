@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -197,7 +199,72 @@ public class PotUTest {
         assertThrows(IllegalArgumentException.class, () -> pot.addPotShareholders(potShareholderNames));
     }
 
-    // TODO 
-    // - Rename PS : OK
-    // - Rename PS : checks on name
+    @Test
+    public void create_Pot_add_PotShareholders_rename_PotShareholder_OK() {
+        String potName = "Pot 1";
+        Pot pot = Pot.builder(potName).build();
+        pot.addPotShareholder("Alex");
+        ArrayList<String> potShareholderNames = new ArrayList<String>();
+        potShareholderNames.add("Bob");
+        potShareholderNames.add("Chris");
+        pot.addPotShareholders(potShareholderNames);
+
+        UUID potShareholderUUid = pot.getPotShareholders().values().iterator().next().getUuid();
+
+        pot.renamePotShareholder(potShareholderUUid, "Arthur");
+        assertEquals(pot.getPotShareholders().get(potShareholderUUid).getName(), "Arthur");
+    }
+
+    @Test
+    public void create_Pot_add_PotShareholders_rename_null_Uuid_KO() {
+        String potName = "Pot 1";
+        Pot pot = Pot.builder(potName).build();
+        pot.addPotShareholder("Alex");
+        ArrayList<String> potShareholderNames = new ArrayList<String>();
+        potShareholderNames.add("Bob");
+        potShareholderNames.add("Chris");
+        pot.addPotShareholders(potShareholderNames);
+
+        UUID potShareholderUUid = null;
+
+        assertThrows(IllegalArgumentException.class, () -> pot.renamePotShareholder(potShareholderUUid, "Arthur"));
+    }
+
+    @Test
+    public void create_Pot_add_PotShareholders_rename_non_existing_Uuid_KO() {
+        String potName = "Pot 1";
+        Pot pot = Pot.builder(potName).build();
+        pot.addPotShareholder("Alex");
+        ArrayList<String> potShareholderNames = new ArrayList<String>();
+        potShareholderNames.add("Bob");
+        potShareholderNames.add("Chris");
+        pot.addPotShareholders(potShareholderNames);
+
+        UUID potShareholderUUid = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> pot.renamePotShareholder(potShareholderUUid, "Arthur"));
+    }
+
+    @Test
+    public void create_Pot_add_PotShareholders_rename_PotShareholder_existing_name_KO() {
+        String potName = "Pot 1";
+        Pot pot = Pot.builder(potName).build();
+        pot.addPotShareholder("Alex");
+        ArrayList<String> potShareholderNames = new ArrayList<String>();
+        potShareholderNames.add("Bob");
+        potShareholderNames.add("Chris");
+        pot.addPotShareholders(potShareholderNames);
+
+        Iterator<PotShareholder> potShareholders = pot.getPotShareholders().values().iterator();
+        PotShareholder potShareholder = null;
+        boolean otherPSFound = false;
+        while (!otherPSFound) {
+            potShareholder = potShareholders.next();
+            otherPSFound = (!"Bob".equals(potShareholder.getName()));
+        }
+        UUID potShareholderUUid = potShareholder.getUuid();
+
+        assertThrows(IllegalArgumentException.class, () -> pot.renamePotShareholder(potShareholderUUid, "Bob"));
+    }
+
 }
