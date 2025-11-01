@@ -1,11 +1,11 @@
 package com.kartaguez.bluepot.application._to_delete.usecase.worker;
 
 import com.kartaguez.bluepot.application._to_delete.down.repository.PotGlobalVersionRepository;
-import com.kartaguez.bluepot.application._to_delete.down.repository.PotRepository;
 import com.kartaguez.bluepot.application._to_delete.down.repository.PotShareholderRepository;
 import com.kartaguez.bluepot.application._to_delete.usecase.dto.CreatePotDtoIn;
 import com.kartaguez.bluepot.application._to_delete.usecase.dto.CreatePotDtoOut;
 import com.kartaguez.bluepot.application._to_delete.usecase.mapper.CreatePotDtoOutMapper;
+import com.kartaguez.bluepot.application.down.repository.PotRepository;
 import com.kartaguez.bluepot.domain._to_delete.model.PotGlobalVersion;
 import com.kartaguez.bluepot.domain._to_delete.model.Pot_old1;
 

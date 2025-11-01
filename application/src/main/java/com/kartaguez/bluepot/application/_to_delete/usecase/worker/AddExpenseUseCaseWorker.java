@@ -7,10 +7,10 @@ import org.apache.commons.lang3.math.Fraction;
 
 import com.kartaguez.bluepot.application._to_delete.down.repository.ExpenseRepository;
 import com.kartaguez.bluepot.application._to_delete.down.repository.PotGlobalVersionRepository;
-import com.kartaguez.bluepot.application._to_delete.down.repository.PotRepository;
 import com.kartaguez.bluepot.application._to_delete.usecase.dto.AddExpenseDtoIn;
 import com.kartaguez.bluepot.application._to_delete.usecase.dto.AddExpenseDtoOut;
 import com.kartaguez.bluepot.application._to_delete.usecase.mapper.AddExpenseDtoOutMapper;
+import com.kartaguez.bluepot.application.down.repository.PotRepository;
 import com.kartaguez.bluepot.domain._to_delete.mapper.ExpenseShareholderDtoMapper;
 import com.kartaguez.bluepot.domain._to_delete.model.Expense;
 import com.kartaguez.bluepot.domain._to_delete.model.PotGlobalVersion;

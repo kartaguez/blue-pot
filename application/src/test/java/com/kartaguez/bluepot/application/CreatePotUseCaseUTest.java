@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.kartaguez.bluepot.application.usecase.CreatePotUseCase;
-import com.kartaguez.bluepot.application.usecase.dto.CreatePotDto;
-import com.kartaguez.bluepot.application.usecase.dto.PotDto;
-import com.kartaguez.bluepot.application.usecase.dto.PotShareholderDto;
+import com.kartaguez.bluepot.application.dto.CreatePotDto;
+import com.kartaguez.bluepot.application.dto.PotDto;
+import com.kartaguez.bluepot.application.dto.PotShareholderDto;
+import com.kartaguez.bluepot.application.usecases.CreatePotUseCase;
 
 
 public class CreatePotUseCaseUTest {
