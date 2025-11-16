@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class PotGlobalVersionEntity {
+public class PotShareholderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,15 +20,19 @@ public class PotGlobalVersionEntity {
     @Version
     private Long version;
 
+    private UUID uuid;
     private UUID potUuid;
-    private long potBusinessVersionValue;
-    private String potBusinessVersionStamp;
+    private Long createdAtVersion;
+    private Long deletedAtVersion;
 
-    public PotGlobalVersionEntity(Long _id, UUID _potUuid, Long _potBusinessVersionValue, String _potBusinessVersionStamp) {
-        this.id = _id;
+    private String name;
+
+    public PotShareholderEntity(UUID _uuid, UUID _potUuid, long _createdAtVersion, long _deletedAtVersion, String _name) {
+        this.uuid = _uuid;
         this.potUuid = _potUuid;
-        this.potBusinessVersionValue = _potBusinessVersionValue;
-        this.potBusinessVersionStamp = _potBusinessVersionStamp;
+        this.createdAtVersion = _createdAtVersion;
+        this.deletedAtVersion = _deletedAtVersion;
+        this.name = _name;
     }
 
 }

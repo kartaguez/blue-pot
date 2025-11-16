@@ -6,10 +6,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.kartaguez.bluepot.application.dto.CreatePotDto;
-import com.kartaguez.bluepot.application.dto.PotDto;
-import com.kartaguez.bluepot.application.dto.PotShareholderDto;
 import com.kartaguez.bluepot.application.usecases.CreatePotUseCase;
+import com.kartaguez.bluepot.application.usecases.commands.CreatePotUseCaseCmd;
 
 
 public class CreatePotUseCaseUTest {
@@ -17,54 +15,38 @@ public class CreatePotUseCaseUTest {
     @Test
     public void create_Pot_with_PotShareholders_OK() {
         CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        PotShareholderDto psDto1 = new PotShareholderDto(null, "Alex");
-        PotShareholderDto psDto2 = new PotShareholderDto(null, "Bob");
-        PotDto potDto = new PotDto(null, "Pot 1", List.of(psDto1, psDto2));
-        CreatePotDto createPotDtoIn = new CreatePotDto(potDto);
-        createPotUseCase.apply(createPotDtoIn);
+        CreatePotUseCaseCmd createPotUseCaseCmd = new CreatePotUseCaseCmd("Pot 1", List.of("Alex", "Bob"));
+        createPotUseCase.apply(createPotUseCaseCmd);
     }
 
     @Test
-    public void create_Pot_with_PotShareholders_null_DTO_KO() {
+    public void create_Pot_with_cmd_null_KO() {
         CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        CreatePotDto createPotDtoIn = null;
-        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotDtoIn));
+        CreatePotUseCaseCmd createPotUseCaseCmd = null;
+        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotUseCaseCmd));
+        createPotUseCase.apply(createPotUseCaseCmd);
     }
 
     @Test
-    public void create_Pot_with_PotShareholders_null_potName_KO() {
+    public void create_Pot_with_PotName_null_KO() {
         CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        PotShareholderDto psDto1 = new PotShareholderDto(null, "Alex");
-        PotShareholderDto psDto2 = new PotShareholderDto(null, "Bob");
-        PotDto potDto = new PotDto(null, null, List.of(psDto1, psDto2));
-        CreatePotDto createPotDtoIn = new CreatePotDto(potDto);
-        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotDtoIn));
+        CreatePotUseCaseCmd createPotUseCaseCmd = new CreatePotUseCaseCmd(null, List.of("Alex", "Bob"));
+        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotUseCaseCmd));
+        createPotUseCase.apply(createPotUseCaseCmd);
     }
 
     @Test
-    public void create_Pot_with_PotShareholders_empty_potName_KO() {
+    public void create_Pot_with_PotShareholders_null_KO() {
         CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        PotShareholderDto psDto1 = new PotShareholderDto(null, "Alex");
-        PotShareholderDto psDto2 = new PotShareholderDto(null, "Bob");
-        PotDto potDto = new PotDto(null, "", List.of(psDto1, psDto2));
-        CreatePotDto createPotDtoIn = new CreatePotDto(potDto);
-        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotDtoIn));
+        CreatePotUseCaseCmd createPotUseCaseCmd = new CreatePotUseCaseCmd("Pot 1", null);
+        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotUseCaseCmd));
     }
 
     @Test
-    public void create_Pot_with_PotShareholders_null_potShareholderNames_list_OK() {
+    public void create_Pot_with_PotShareholders_name_null_KO() {
         CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        PotDto potDto = new PotDto(null, "Pot 1", null);
-        CreatePotDto createPotDtoIn = new CreatePotDto(potDto);
-        createPotUseCase.apply(createPotDtoIn);
-    }
-
-    @Test
-    public void create_Pot_with_PotShareholders_empty_potShareholderNames_list_OK() {
-        CreatePotUseCase createPotUseCase = new CreatePotUseCase();
-        PotDto potDto = new PotDto(null, "Pot 1", List.of());
-        CreatePotDto createPotDtoIn = new CreatePotDto(potDto);
-        createPotUseCase.apply(createPotDtoIn);
+        CreatePotUseCaseCmd createPotUseCaseCmd = new CreatePotUseCaseCmd("Pot 1", List.of("Alex", null));
+        assertThrows(IllegalArgumentException.class, () -> createPotUseCase.apply(createPotUseCaseCmd));
     }
 
 }

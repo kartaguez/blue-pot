@@ -1,11 +1,11 @@
 package com.kartaguez.bluepot.application.usecases;
 
-import com.kartaguez.bluepot.application.down.repository.PotGlobalVersionRepository;
 import com.kartaguez.bluepot.application.down.repository.PotRepository;
-import com.kartaguez.bluepot.application.dto.PotDto;
+import com.kartaguez.bluepot.application.down.transaction.TransactionRunner;
 import com.kartaguez.bluepot.application.services.PotGlobalVersionCalculator;
 import com.kartaguez.bluepot.application.usecases.commands.RenamePotUseCaseCmd;
 import com.kartaguez.bluepot.application.usecases.results.RenamePotUseCaseResult;
+import com.kartaguez.bluepot.dto.PotDto;
 import com.kartaguez.bluepot.model.Pot;
 
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class RenamePotUseCase {
 
     private PotGlobalVersionCalculator potGlobalVersionCalculator;
-    private PotGlobalVersionRepository potGlobalVersionRepository;
     private PotRepository potRepository;
+    private TransactionRunner tr;
 
     public RenamePotUseCaseResult apply(RenamePotUseCaseCmd renamePotUseCaseCmd) {
         if (null == renamePotUseCaseCmd) {
@@ -31,18 +31,30 @@ public class RenamePotUseCase {
             throw new IllegalArgumentException("Pot Name cannot be null.");
         }
         
-        if (!this.potGlobalVersionRepository.expectedAndCurrentBusinessVersionValueAndStampDoMatch(renamePotUseCaseCmd.potUuid(), renamePotUseCaseCmd.expectedPotBusinessVersionValue(), renamePotUseCaseCmd.expectedPotBusinessVersionStamp())) {
-            throw new IllegalArgumentException("Expected Pot Business Version Value and Stamp are wrong.");
-        }
-        Pot pot = this.potRepository.fetchPotWithUuidAndBusinessVersionValue(renamePotUseCaseCmd.potUuid(), renamePotUseCaseCmd.expectedPotBusinessVersionValue());
-        
+        // 1. 1st transaction : fetch Pot
+        Pot pot = tr.inTransaction(() -> 
+            {
+                return this.potRepository.fetchPotWithUuidIfBusinessVersionsDoMatch(renamePotUseCaseCmd.potUuid(), renamePotUseCaseCmd.expectedPotBusinessVersionValue(), renamePotUseCaseCmd.expectedPotBusinessVersionStamp());
+            }
+        );
+
+        //2. Update Pot
         pot.rename(renamePotUseCaseCmd.potName());
 
-        Long potBusinessVersionValue = this.potGlobalVersionCalculator.getNextPotBusinessVersionValue(renamePotUseCaseCmd.expectedPotBusinessVersionValue());
-        String potBusinessVersionStamp = this.potGlobalVersionCalculator.getPotBusinessVersionStamp(potBusinessVersionValue, pot);
-        this.potRepository.save(pot, potBusinessVersionValue);
-        this.potGlobalVersionRepository.save(pot.getUuid(), potBusinessVersionValue, potBusinessVersionStamp);
+        // 3. Generate new business version
+        Long potNewBusinessVersionValue = this.potGlobalVersionCalculator.getNextPotBusinessVersionValue(renamePotUseCaseCmd.expectedPotBusinessVersionValue());
+        String potNewBusinessVersionStamp = this.potGlobalVersionCalculator.getPotBusinessVersionStamp(potNewBusinessVersionValue, pot);
+
+        // 4. 2nd transaction: save updated Pot
+        tr.inTransaction(() -> 
+            {
+                this.potRepository.save(pot, renamePotUseCaseCmd.expectedPotBusinessVersionValue(), renamePotUseCaseCmd.expectedPotBusinessVersionStamp(), potNewBusinessVersionValue, potNewBusinessVersionStamp);
+                return null;
+
+            }
+        );
     
+        // Return
         return new RenamePotUseCaseResult(PotDto.of(pot));
     }
 

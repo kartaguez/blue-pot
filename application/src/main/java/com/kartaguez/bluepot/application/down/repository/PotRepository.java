@@ -6,7 +6,9 @@ import com.kartaguez.bluepot.model.Pot;
 
 public interface PotRepository {
 
-    public void save(Pot pot, Long PotBusinessVersionValue);
+    public Pot fetchPotWithUuidIfBusinessVersionsDoMatch(UUID potUuid, Long expectedPotBusinessVersionValue,
+            String expectedPotBusinessVersionStamp);
 
-    public Pot fetchPotWithUuidAndBusinessVersionValue(UUID potUuid, long potBusinessVersionValue);
+    public void save(Pot pot, Long expectedPotBusinessVersionValue, String expectedPotBusinessVersionStamp,
+            Long potNewBusinessVersionValue, String potNewBusinessVersionStamp);
 }

@@ -3,14 +3,14 @@ package com.kartaguez.bluepot.application.usecases;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.kartaguez.bluepot.application.down.repository.PotGlobalVersionRepository;
 import com.kartaguez.bluepot.application.down.repository.PotRepository;
-import com.kartaguez.bluepot.application.dto.PotDto;
+import com.kartaguez.bluepot.application.down.transaction.TransactionRunner;
 import com.kartaguez.bluepot.application.services.PotGlobalVersionCalculator;
 import com.kartaguez.bluepot.application.services.PotShareholderUuidGenerator;
 import com.kartaguez.bluepot.application.services.PotUuidGenerator;
 import com.kartaguez.bluepot.application.usecases.commands.CreatePotUseCaseCmd;
 import com.kartaguez.bluepot.application.usecases.results.CreatePotUseCaseResult;
+import com.kartaguez.bluepot.dto.PotDto;
 import com.kartaguez.bluepot.model.Pot;
 
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class CreatePotUseCase {
     private PotUuidGenerator potUuidGenerator;
     private PotShareholderUuidGenerator potShareholderUuidGenerator;
     private PotGlobalVersionCalculator potGlobalVersionCalculator;
-    private PotGlobalVersionRepository potGlobalVersionRepository;
     private PotRepository potRepository;
+    private TransactionRunner tr;
 
     public CreatePotUseCaseResult apply(CreatePotUseCaseCmd createPotUseCaseCmd) {
         if (null == createPotUseCaseCmd) {
@@ -40,11 +40,16 @@ public class CreatePotUseCase {
         }
         pot.addPotShareholders(potShareholderNames);
 
-        Long potBusinessVersionValue = this.potGlobalVersionCalculator.getInitPotBusinessVersionValue();
-        String potBusinessVersionStamp = this.potGlobalVersionCalculator.getPotBusinessVersionStamp(potBusinessVersionValue, pot);
-        this.potGlobalVersionRepository.save(pot.getUuid(), potBusinessVersionValue, potBusinessVersionStamp);
-        this.potRepository.save(pot, potBusinessVersionValue);
-    
+        Long potFirstBusinessVersionValue = this.potGlobalVersionCalculator.getInitPotBusinessVersionValue();
+        String potFirstBusinessVersionStamp = this.potGlobalVersionCalculator.getPotBusinessVersionStamp(potFirstBusinessVersionValue, pot);
+        
+        tr.inTransaction(() -> 
+            {
+                this.potRepository.save(pot, null, null, potFirstBusinessVersionValue, potFirstBusinessVersionStamp);
+                return null;
+            }
+        );
+        
         return new CreatePotUseCaseResult(PotDto.of(pot));
     }
 

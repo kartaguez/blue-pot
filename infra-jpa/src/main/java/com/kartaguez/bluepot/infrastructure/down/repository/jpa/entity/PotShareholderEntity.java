@@ -22,16 +22,16 @@ public class PotShareholderEntity {
 
     private UUID uuid;
     private UUID potUuid;
-    private Long createdAtVersion;
-    private Long deletedAtVersion;
+    private Long activeFromBusinessVersionValue;
+    private Long inactiveFromBusinessVersionValue;
 
     private String name;
 
-    public PotShareholderEntity(UUID _uuid, UUID _potUuid, long _createdAtVersion, long _deletedAtVersion, String _name) {
+    public PotShareholderEntity(UUID _uuid, UUID _potUuid, Long _activeFromBusinessVersionValue, Long _inactiveFromBusinessVersionValue, String _name) {
         this.uuid = _uuid;
         this.potUuid = _potUuid;
-        this.createdAtVersion = _createdAtVersion;
-        this.deletedAtVersion = _deletedAtVersion;
+        this.activeFromBusinessVersionValue = _activeFromBusinessVersionValue;
+        this.inactiveFromBusinessVersionValue = _inactiveFromBusinessVersionValue;
         this.name = _name;
     }
 

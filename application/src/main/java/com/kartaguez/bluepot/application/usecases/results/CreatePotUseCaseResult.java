@@ -1,6 +1,6 @@
 package com.kartaguez.bluepot.application.usecases.results;
 
-import com.kartaguez.bluepot.application.dto.PotDto;
+import com.kartaguez.bluepot.dto.PotDto;
 
 public record CreatePotUseCaseResult(PotDto potDto) {
 

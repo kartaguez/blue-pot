@@ -21,14 +21,12 @@ public class PotGlobalVersionEntity {
     private Long version;
 
     private UUID potUuid;
-    private long potBusinessVersionValue;
-    private String potBusinessVersionStamp;
+    private Long potVersion;
 
-    public PotGlobalVersionEntity(Long _id, UUID _potUuid, Long _potBusinessVersionValue, String _potBusinessVersionStamp) {
+    public PotGlobalVersionEntity(Long _id, UUID _potUuid, long _potVersion) {
         this.id = _id;
         this.potUuid = _potUuid;
-        this.potBusinessVersionValue = _potBusinessVersionValue;
-        this.potBusinessVersionStamp = _potBusinessVersionStamp;
+        this.potVersion = _potVersion;
     }
 
 }

@@ -12,14 +12,18 @@ import lombok.Getter;
 public class PotShareholder {
 
     private UUID uuid;
+    private UUID potUuid;
     private String name;
 
-    public static PotShareholderBuilder builder(UUID _uuid, String _name) {
+    public static PotShareholderBuilder builder(UUID _uuid, UUID _potUuid, String _name) {
         if (null == _uuid) {
             throw new IllegalArgumentException("PotShareholder Uuid cannot be null.");
         }
+            if (null == _potUuid) {
+            throw new IllegalArgumentException("Pot Uuid cannot be null.");
+        }
         String trimmedName = checkAndCleanName(_name);
-        return internalBuilder().uuid(_uuid).name(trimmedName);
+        return internalBuilder().uuid(_uuid).potUuid(_potUuid).name(trimmedName);
     }
 
     private static PotShareholderBuilder internalBuilder() {

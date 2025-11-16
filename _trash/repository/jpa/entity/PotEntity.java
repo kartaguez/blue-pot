@@ -21,15 +21,15 @@ public class PotEntity {
     private Long version;
 
     private UUID uuid;
-    private Long activeFromBusinessVersionValue;
-    private Long inactiveFromBusinessVersionValue;
+    private Long createdAtVersion;
+    private Long deletedAtVersion;
     
     private String name;
 
-    public PotEntity(UUID _uuid, Long _activeFromBusinessVersionValue, Long _inactiveFromBusinessVersionValue, String _name) {
+    public PotEntity(UUID _uuid, long _createdAtVersion, long _deletedAtVersion, String _name) {
         this.uuid = _uuid;
-        this.activeFromBusinessVersionValue = _activeFromBusinessVersionValue;
-        this.inactiveFromBusinessVersionValue = _inactiveFromBusinessVersionValue;
+        this.createdAtVersion = _createdAtVersion;
+        this.deletedAtVersion = _deletedAtVersion;
         this.name = _name;
     }
 

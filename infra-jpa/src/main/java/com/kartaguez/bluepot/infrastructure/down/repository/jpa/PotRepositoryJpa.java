@@ -1,37 +1,136 @@
 package com.kartaguez.bluepot.infrastructure.down.repository.jpa;
 
+import java.util.List;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
-
 import com.kartaguez.bluepot.application.down.repository.PotRepository;
-import com.kartaguez.bluepot.domain._to_delete.model.Pot_old1;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity;
+import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotGlobalVersionEntity;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.mapper.PotEntityMapper;
-import com.kartaguez.bluepot.infrastructure.down.repository.jpa.wrapped.PotEntityJpaRepository;
+import com.kartaguez.bluepot.model.Pot;
 
-import lombok.NonNull;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @RequiredArgsConstructor
 public class PotRepositoryJpa implements PotRepository {
 
-    private final PotEntityJpaRepository potEntityJpaRepository;
+    private final EntityManager entityManager;
     private final PotEntityMapper potEntityMapper;
 
     @Override
-    public Pot_old1 loadPotByUuid(@NonNull UUID uuid, long targetGlobalVersion) {
-        PotEntity potEntity = this.potEntityJpaRepository.findByUuid(uuid);
-        return this.potEntityMapper.toDomain(potEntity, targetGlobalVersion);
+    public Pot fetchPotWithUuidIfBusinessVersionsDoMatch(UUID potUuid, Long expectedPotBusinessVersionValue,
+            String expectedPotBusinessVersionStamp) {
+        if (null == potUuid) {
+            throw new IllegalArgumentException("potUuid cannot be null.");
+        }
+        if (null == expectedPotBusinessVersionValue) {
+            throw new IllegalArgumentException("expectedPotBusinessVersionValue cannot be null.");
+        }
+        if (null == expectedPotBusinessVersionStamp) {
+            throw new IllegalArgumentException("expectedPotBusinessVersionStamp cannot be null.");
+        }
+
+        fetchPotGlobalVersionIfBusinessValueDoesMatch(potUuid, expectedPotBusinessVersionValue, expectedPotBusinessVersionStamp);
+
+        PotEntity potEntity = fetchPotWithBusinessVersionValue(potUuid, expectedPotBusinessVersionValue);
+    
+         return potEntityMapper.toDomain(potEntity);
     }
 
     @Override
-    public Pot_old1 save(@NonNull Pot_old1 pot) {
-        PotEntity potEntity = this.potEntityMapper.toEntity(pot);
-        potEntity = this.potEntityJpaRepository.save(potEntity);
-        //return this.potEntityMapper.toDomain(potEntity, pot.getTargetGlobalVersion());
-        return null;
+    public void save(Pot pot, Long expectedPotBusinessVersionValue, String expectedPotBusinessVersionStamp,
+            Long potNewBusinessVersionValue, String potNewBusinessVersionStamp) {
+
+            if (null == pot) {
+                throw new IllegalArgumentException("pot cannot be null.");
+            }
+            UUID potUuid = pot.getUuid();
+            if (null == potUuid) {
+                throw new IllegalArgumentException("potUuid cannot be null.");
+            }
+            if (null == expectedPotBusinessVersionValue) {
+                throw new IllegalArgumentException("expectedPotBusinessVersionValue cannot be null.");
+            }
+            if (null == expectedPotBusinessVersionStamp) {
+                throw new IllegalArgumentException("expectedPotBusinessVersionStamp cannot be null.");
+            }
+            if (null == potNewBusinessVersionValue) {
+                throw new IllegalArgumentException("potNewBusinessVersionValue cannot be null.");
+            }
+            if (null == potNewBusinessVersionStamp) {
+                throw new IllegalArgumentException("potNewBusinessVersionStamp cannot be null.");
+            }
+
+            // 1. Retrieve current PotGlobalVersion against expected V and S
+            PotGlobalVersionEntity potGlobalVersionEntity = fetchPotGlobalVersionIfBusinessValueDoesMatch(potUuid, expectedPotBusinessVersionValue, expectedPotBusinessVersionStamp);
+
+            // 2. Create new PotEntity based on updated Pot associated PotEntity
+            PotEntity currentVersionPotEntity = fetchPotWithBusinessVersionValue(potUuid, expectedPotBusinessVersionValue);
+
+            // 3. Make current version PotEntity inactive
+            currentVersionPotEntity.setInactiveFromBusinessVersionValue(potNewBusinessVersionValue);
+
+            // 5. Create new version PotEntity from updated Pot
+            PotEntity newVersionPotEntity = this.potEntityMapper.toEntity(pot, potNewBusinessVersionValue, null);
+
+            // 6. Persist new version PotEntity
+            this.entityManager.persist(newVersionPotEntity);
+
+            // 7. Update PotGlobalVersion
+            potGlobalVersionEntity.setPotBusinessVersionValue(potNewBusinessVersionValue);
+            potGlobalVersionEntity.setPotBusinessVersionStamp(potNewBusinessVersionStamp);
+
+    }
+
+    private PotGlobalVersionEntity fetchPotGlobalVersionIfBusinessValueDoesMatch(UUID potUuid, Long expectedPotBusinessVersionValue,
+            String expectedPotBusinessVersionStamp) {
+        CriteriaBuilder fetchPotGlobalVersionCriteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PotGlobalVersionEntity> fetchPotGlobalVersionCriteriaQuery = fetchPotGlobalVersionCriteriaBuilder.createQuery(PotGlobalVersionEntity.class);
+        Root<PotGlobalVersionEntity> potGlobalVersionEntityRoot = fetchPotGlobalVersionCriteriaQuery.from(PotGlobalVersionEntity.class);
+        
+        Predicate predicatePotGlobalVersionUuid = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potUuid"), potUuid.toString());
+        Predicate predicatePotGlobalVersionBusinessVersionValue = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potBusinessVersionValue"), expectedPotBusinessVersionValue);
+        Predicate predicatePotGlobalVersionBusinessVersionStamp = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potBusinessVersionStamp"), expectedPotBusinessVersionStamp);
+        Predicate predicatePotGlobalVersionUuidAndVersion =  fetchPotGlobalVersionCriteriaBuilder.and(predicatePotGlobalVersionUuid, predicatePotGlobalVersionBusinessVersionValue, predicatePotGlobalVersionBusinessVersionStamp);
+        fetchPotGlobalVersionCriteriaQuery.where(predicatePotGlobalVersionUuidAndVersion);
+
+        List<PotGlobalVersionEntity> potGlobalVersionEntities = this.entityManager.createQuery(fetchPotGlobalVersionCriteriaQuery).getResultList();
+
+         if (potGlobalVersionEntities.size() > 1) {
+            throw new IllegalStateException ("Zero or one PotGlobalVersionEntity expected, but " +  potGlobalVersionEntities.size() + " found.");
+         }
+         if (potGlobalVersionEntities.size() == 0) {
+            throw new IllegalArgumentException ("PotGlobalVersionEntity found matching expectedBusinessVersion Value or Stamp");
+         }
+
+        return potGlobalVersionEntities.getFirst();
+    }
+
+    private PotEntity fetchPotWithBusinessVersionValue(UUID potUuid, Long expectedPotBusinessVersionValue) {
+        CriteriaBuilder fetchPotCriteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PotEntity> fetchPotCriteriaQuery = fetchPotCriteriaBuilder.createQuery(PotEntity.class);
+        Root<PotEntity> potEntityRoot = fetchPotCriteriaQuery.from(PotEntity.class);
+        
+        Predicate predicatePotUuid = fetchPotCriteriaBuilder.equal(potEntityRoot.get("uuid"), potUuid.toString());
+        Predicate predicateActivePotBusinessVersionValue = fetchPotCriteriaBuilder.lessThanOrEqualTo(potEntityRoot.get("activeFromBusinessVersionValue"), expectedPotBusinessVersionValue);
+        Predicate predicateInactivePotBusinessVersionValueNull = fetchPotCriteriaBuilder.isNull(potEntityRoot.get("inactiveFromBusinessVersionValue"));
+        Predicate predicateInactivePotBusinessVersionValueUpperBound = fetchPotCriteriaBuilder.greaterThanOrEqualTo(potEntityRoot.get("inactiveFromBusinessVersionValue"), expectedPotBusinessVersionValue);
+        Predicate predicateInactivePotBusinessVersionValue = fetchPotCriteriaBuilder.or(predicateInactivePotBusinessVersionValueNull, predicateInactivePotBusinessVersionValueUpperBound);
+        Predicate predicatePotUuidAndVersion =  fetchPotCriteriaBuilder.and(predicatePotUuid, predicateActivePotBusinessVersionValue, predicateInactivePotBusinessVersionValue);
+        fetchPotCriteriaQuery.where(predicatePotUuidAndVersion);
+
+        List<PotEntity> potEntities = this.entityManager.createQuery(fetchPotCriteriaQuery).getResultList();
+
+         if (potEntities.size() != 1) {
+            throw new IllegalStateException ("One PotEntity expected, but " +  potEntities.size() + " found.");
+         }
+
+        return potEntities.getFirst();
     }
 
 }

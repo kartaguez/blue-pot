@@ -1,7 +1,6 @@
 package com.kartaguez.bluepot.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import com.kartaguez.bluepot.utils.Constants;
@@ -37,7 +36,7 @@ public class Pot {
         if (this.potShareholders.containsKey(potShareholderUuid)) {
             throw new IllegalArgumentException("PotShareholder with same Uuid already exists");
         }
-        PotShareholder newPotShareholder = PotShareholder.builder(potShareholderUuid, potShareholderName).build();
+        PotShareholder newPotShareholder = PotShareholder.builder(potShareholderUuid, this.uuid, potShareholderName).build();
         // FOR REUSE
         // if (this.potShareholders.values().stream().anyMatch(potShareholder -> potShareholder.getName().equals(newPotShareholder.getName()))) {
         //     throw new IllegalArgumentException("PotShareholder with same name already exists");
