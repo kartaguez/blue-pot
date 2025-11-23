@@ -48,7 +48,7 @@ public class PotRepositoryJpa implements PotRepository {
 
     @Override
     public void save(Pot pot, Long expectedPotBusinessVersionValue, String expectedPotBusinessVersionStamp,
-            Long potNewBusinessVersionValue, String potNewBusinessVersionStamp) {
+            Long newPotBusinessVersionValue, String newPotBusinessVersionStamp) {
 
             if (null == pot) {
                 throw new IllegalArgumentException("pot cannot be null.");
@@ -63,36 +63,38 @@ public class PotRepositoryJpa implements PotRepository {
             if (null == expectedPotBusinessVersionStamp) {
                 throw new IllegalArgumentException("expectedPotBusinessVersionStamp cannot be null.");
             }
-            if (null == potNewBusinessVersionValue) {
-                throw new IllegalArgumentException("potNewBusinessVersionValue cannot be null.");
+            if (null == newPotBusinessVersionValue) {
+                throw new IllegalArgumentException("newPotBusinessVersionValue cannot be null.");
             }
-            if (null == potNewBusinessVersionStamp) {
-                throw new IllegalArgumentException("potNewBusinessVersionStamp cannot be null.");
+            if (null == newPotBusinessVersionStamp) {
+                throw new IllegalArgumentException("newPotBusinessVersionStamp cannot be null.");
             }
 
             // 1. Retrieve current PotGlobalVersion against expected V and S
             PotGlobalVersionEntity potGlobalVersionEntity = fetchPotGlobalVersionIfBusinessValueDoesMatch(potUuid, expectedPotBusinessVersionValue, expectedPotBusinessVersionStamp);
-
-            // 2. Create new PotEntity based on updated Pot associated PotEntity
+            log.info("PotGlobalVersion retrieved with: uuid: " + potUuid + ", expectedPotBusinessVersionValue: " + expectedPotBusinessVersionValue + ", expectedPotBusinessVersionStamp: " + expectedPotBusinessVersionStamp);
+            
+            // 2. Fetch PotEntity associated with V
             PotEntity currentVersionPotEntity = fetchPotWithBusinessVersionValue(potUuid, expectedPotBusinessVersionValue);
+            log.info("Pot retrieved with: uuid: " + potUuid + ", expectedPotBusinessVersionValue: " + expectedPotBusinessVersionValue);
 
             // 3. Make current version PotEntity inactive
-            currentVersionPotEntity.setInactiveFromBusinessVersionValue(potNewBusinessVersionValue);
+            currentVersionPotEntity.setInactiveFromBusinessVersionValue(newPotBusinessVersionValue);
 
             // 5. Create new version PotEntity from updated Pot
-            PotEntity newVersionPotEntity = this.potEntityMapper.toEntity(pot, potNewBusinessVersionValue, null);
+            PotEntity newVersionPotEntity = this.potEntityMapper.toEntity(pot, newPotBusinessVersionValue, null);
 
             // 6. Persist new version PotEntity
             this.entityManager.persist(newVersionPotEntity);
+            log.info("Pot persisted with id: " + newVersionPotEntity.getId() + ", uuid: " + newVersionPotEntity.getUuid() + ", active from: " + newVersionPotEntity.getActiveFromBusinessVersionValue() + ", inactive from: " + newVersionPotEntity.getInactiveFromBusinessVersionValue());
 
             // 7. Update PotGlobalVersion
-            potGlobalVersionEntity.setPotBusinessVersionValue(potNewBusinessVersionValue);
-            potGlobalVersionEntity.setPotBusinessVersionStamp(potNewBusinessVersionStamp);
+            potGlobalVersionEntity.setPotBusinessVersionValue(newPotBusinessVersionValue);
+            potGlobalVersionEntity.setPotBusinessVersionStamp(newPotBusinessVersionStamp);
 
     }
 
-    private PotGlobalVersionEntity fetchPotGlobalVersionIfBusinessValueDoesMatch(UUID potUuid, Long expectedPotBusinessVersionValue,
-            String expectedPotBusinessVersionStamp) {
+    private PotGlobalVersionEntity fetchPotGlobalVersionIfBusinessValueDoesMatch(UUID potUuid, Long expectedPotBusinessVersionValue, String expectedPotBusinessVersionStamp) {
         CriteriaBuilder fetchPotGlobalVersionCriteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PotGlobalVersionEntity> fetchPotGlobalVersionCriteriaQuery = fetchPotGlobalVersionCriteriaBuilder.createQuery(PotGlobalVersionEntity.class);
         Root<PotGlobalVersionEntity> potGlobalVersionEntityRoot = fetchPotGlobalVersionCriteriaQuery.from(PotGlobalVersionEntity.class);
@@ -105,12 +107,12 @@ public class PotRepositoryJpa implements PotRepository {
 
         List<PotGlobalVersionEntity> potGlobalVersionEntities = this.entityManager.createQuery(fetchPotGlobalVersionCriteriaQuery).getResultList();
 
-        log.info("Nb of PotGlobalVersion entities found: " + potGlobalVersionEntities.size());
+        log.info("Nb of PotGlobalVersions found: " + potGlobalVersionEntities.size());
          if (potGlobalVersionEntities.size() > 1) {
-            throw new IllegalStateException ("Zero or one PotGlobalVersionEntity expected, but " +  potGlobalVersionEntities.size() + " found.");
+            throw new IllegalStateException ("Zero or one PotGlobalVersion expected, but " +  potGlobalVersionEntities.size() + " found.");
          }
          if (potGlobalVersionEntities.size() == 0) {
-            throw new IllegalArgumentException ("PotGlobalVersionEntity found matching expectedBusinessVersion Value or Stamp");
+            throw new IllegalArgumentException ("No PotGlobalVersion found matching: uuid: " + potUuid + ", businessVersionValue: " + expectedPotBusinessVersionValue + ", businessVersionStamp: " + expectedPotBusinessVersionStamp);
          }
 
         log.info("PotGlobalVersion found: potUuid:" + potGlobalVersionEntities.getFirst().getPotUuid() + ", businessVersionValue: " + potGlobalVersionEntities.getFirst().getPotBusinessVersionValue() + ", businessVersionStamp: " + potGlobalVersionEntities.getFirst().getPotBusinessVersionStamp());

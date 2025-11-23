@@ -42,6 +42,6 @@ CREATE TABLE pot_shareholder(
 );
 
 CREATE SEQUENCE public.hibernate_sequence
-    START WITH 1
+    START WITH 100
     INCREMENT BY 1;
 
