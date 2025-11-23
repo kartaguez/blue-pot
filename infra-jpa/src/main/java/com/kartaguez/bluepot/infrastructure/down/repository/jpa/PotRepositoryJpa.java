@@ -38,8 +38,7 @@ public class PotRepositoryJpa implements PotRepository {
         fetchPotGlobalVersionIfBusinessValueDoesMatch(potUuid, expectedPotBusinessVersionValue, expectedPotBusinessVersionStamp);
 
         PotEntity potEntity = fetchPotWithBusinessVersionValue(potUuid, expectedPotBusinessVersionValue);
-    
-         return potEntityMapper.toDomain(potEntity);
+        return potEntityMapper.toDomain(potEntity);
     }
 
     @Override
@@ -93,7 +92,7 @@ public class PotRepositoryJpa implements PotRepository {
         CriteriaQuery<PotGlobalVersionEntity> fetchPotGlobalVersionCriteriaQuery = fetchPotGlobalVersionCriteriaBuilder.createQuery(PotGlobalVersionEntity.class);
         Root<PotGlobalVersionEntity> potGlobalVersionEntityRoot = fetchPotGlobalVersionCriteriaQuery.from(PotGlobalVersionEntity.class);
         
-        Predicate predicatePotGlobalVersionUuid = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potUuid"), potUuid.toString());
+        Predicate predicatePotGlobalVersionUuid = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potUuid"), potUuid);
         Predicate predicatePotGlobalVersionBusinessVersionValue = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potBusinessVersionValue"), expectedPotBusinessVersionValue);
         Predicate predicatePotGlobalVersionBusinessVersionStamp = fetchPotGlobalVersionCriteriaBuilder.equal(potGlobalVersionEntityRoot.get("potBusinessVersionStamp"), expectedPotBusinessVersionStamp);
         Predicate predicatePotGlobalVersionUuidAndVersion =  fetchPotGlobalVersionCriteriaBuilder.and(predicatePotGlobalVersionUuid, predicatePotGlobalVersionBusinessVersionValue, predicatePotGlobalVersionBusinessVersionStamp);
@@ -116,10 +115,10 @@ public class PotRepositoryJpa implements PotRepository {
         CriteriaQuery<PotEntity> fetchPotCriteriaQuery = fetchPotCriteriaBuilder.createQuery(PotEntity.class);
         Root<PotEntity> potEntityRoot = fetchPotCriteriaQuery.from(PotEntity.class);
         
-        Predicate predicatePotUuid = fetchPotCriteriaBuilder.equal(potEntityRoot.get("uuid"), potUuid.toString());
+        Predicate predicatePotUuid = fetchPotCriteriaBuilder.equal(potEntityRoot.get("uuid"), potUuid);
         Predicate predicateActivePotBusinessVersionValue = fetchPotCriteriaBuilder.lessThanOrEqualTo(potEntityRoot.get("activeFromBusinessVersionValue"), expectedPotBusinessVersionValue);
         Predicate predicateInactivePotBusinessVersionValueNull = fetchPotCriteriaBuilder.isNull(potEntityRoot.get("inactiveFromBusinessVersionValue"));
-        Predicate predicateInactivePotBusinessVersionValueUpperBound = fetchPotCriteriaBuilder.greaterThanOrEqualTo(potEntityRoot.get("inactiveFromBusinessVersionValue"), expectedPotBusinessVersionValue);
+        Predicate predicateInactivePotBusinessVersionValueUpperBound = fetchPotCriteriaBuilder.greaterThan(potEntityRoot.get("inactiveFromBusinessVersionValue"), expectedPotBusinessVersionValue);
         Predicate predicateInactivePotBusinessVersionValue = fetchPotCriteriaBuilder.or(predicateInactivePotBusinessVersionValueNull, predicateInactivePotBusinessVersionValueUpperBound);
         Predicate predicatePotUuidAndVersion =  fetchPotCriteriaBuilder.and(predicatePotUuid, predicateActivePotBusinessVersionValue, predicateInactivePotBusinessVersionValue);
         fetchPotCriteriaQuery.where(predicatePotUuidAndVersion);
