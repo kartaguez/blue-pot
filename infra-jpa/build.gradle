@@ -9,14 +9,15 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.38'
 	annotationProcessor 'org.projectlombok:lombok:1.18.38'
 
-	implementation 'jakarta.persistence:jakarta.persistence-api:3.2.0'
 	implementation 'org.apache.commons:commons-lang3:3.18.0'
+	implementation 'jakarta.persistence:jakarta.persistence-api:3.2.0'
+	implementation 'org.slf4j:slf4j-api:2.0.17'
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.0"
-	
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
 	testImplementation 'org.hibernate.orm:hibernate-core:7.1.7.Final'
 	testImplementation	'com.h2database:h2:2.4.240'
 
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.0"
+	testRuntimeOnly 'ch.qos.logback:logback-classic:1.5.21'
 
 }

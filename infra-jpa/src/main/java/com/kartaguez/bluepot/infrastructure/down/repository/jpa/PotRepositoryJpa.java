@@ -3,6 +3,9 @@ package com.kartaguez.bluepot.infrastructure.down.repository.jpa;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.kartaguez.bluepot.application.down.repository.PotRepository;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotEntity;
 import com.kartaguez.bluepot.infrastructure.down.repository.jpa.entity.PotGlobalVersionEntity;
@@ -18,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PotRepositoryJpa implements PotRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(PotRepositoryJpa.class);
 
     private final EntityManager entityManager;
     private final PotEntityMapper potEntityMapper;
@@ -100,6 +105,7 @@ public class PotRepositoryJpa implements PotRepository {
 
         List<PotGlobalVersionEntity> potGlobalVersionEntities = this.entityManager.createQuery(fetchPotGlobalVersionCriteriaQuery).getResultList();
 
+        log.info("Nb of PotGlobalVersion entities found: " + potGlobalVersionEntities.size());
          if (potGlobalVersionEntities.size() > 1) {
             throw new IllegalStateException ("Zero or one PotGlobalVersionEntity expected, but " +  potGlobalVersionEntities.size() + " found.");
          }
@@ -107,6 +113,7 @@ public class PotRepositoryJpa implements PotRepository {
             throw new IllegalArgumentException ("PotGlobalVersionEntity found matching expectedBusinessVersion Value or Stamp");
          }
 
+        log.info("PotGlobalVersion found: potUuid:" + potGlobalVersionEntities.getFirst().getPotUuid() + ", businessVersionValue: " + potGlobalVersionEntities.getFirst().getPotBusinessVersionValue() + ", businessVersionStamp: " + potGlobalVersionEntities.getFirst().getPotBusinessVersionStamp());
         return potGlobalVersionEntities.getFirst();
     }
 
@@ -124,11 +131,13 @@ public class PotRepositoryJpa implements PotRepository {
         fetchPotCriteriaQuery.where(predicatePotUuidAndVersion);
 
         List<PotEntity> potEntities = this.entityManager.createQuery(fetchPotCriteriaQuery).getResultList();
+        log.info("Nb of Pot entities found: " + potEntities.size());
 
-         if (potEntities.size() != 1) {
+        if (potEntities.size() != 1) {
             throw new IllegalStateException ("One PotEntity expected, but " +  potEntities.size() + " found.");
-         }
+        }
 
+        log.info("Pot found: potUuid:" + potEntities.getFirst().getUuid() + ", active from version: " + potEntities.getFirst().getActiveFromBusinessVersionValue() + ", inactive from version: " + potEntities.getFirst().getInactiveFromBusinessVersionValue());
         return potEntities.getFirst();
     }
 
